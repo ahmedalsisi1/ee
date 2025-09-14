@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TikkoX • Roadmap</title>
+  <meta name="description" content="TikkoX roadmap: products and ecosystem projects along a central path with alternating milestones." />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <style>
+    :root{--bg:#000;--fg:#d4af37;--fg2:#b9992a;--card:#0b0b0b;--line:#151515;--done:#2aa84a;--prog:#ffb020;--next:#888}
+    *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    a{color:var(--fg);text-decoration:none}
+    header{position:sticky;top:0;z-index:10;background:#050505cc;backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+    .wrap{max-width:1100px;margin:auto;padding:14px 20px}
+    nav{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+    .brand img{width:30px;height:30px}
+    .spacer{flex:1}
+    .btn{border:1px solid var(--fg);padding:8px 12px;border-radius:10px;display:inline-block}
+    h1{font-size:32px;margin:18px 0}
+    .hero{padding:30px 20px;text-align:center;background:radial-gradient(ellipse at center,#111 0%,#000 60%)}
+    .muted{color:var(--fg2)}
+    /* timeline */
+    .timeline{position:relative;margin:40px auto;max-width:1100px}
+    .timeline::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(#333,#222)}
+    .item{position:relative;width:50%;padding:14px 20px}
+    .item .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+    .left{left:0;padding-right:30px}
+    .right{left:50%;padding-left:30px}
+    .dot{position:absolute;top:22px;left:calc(50% - 7px);width:14px;height:14px;background:var(--fg);border-radius:50%;box-shadow:0 0 0 3px #000}
+    .tag{font-size:12px;padding:4px 8px;border-radius:999px;border:1px solid #333;margin-left:6px}
+    .done{border-color:var(--done);color:var(--done)}
+    .prog{border-color:var(--prog);color:var(--prog)}
+    .next{border-color:var(--next);color:var(--next)}
+    .title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .title b{font-size:16px}
+    @media (max-width:800px){
+      .timeline::before{left:12px}
+      .item{width:100%;padding:14px 20px 14px 36px}
+      .left,.right{left:0;padding:14px 20px 14px 36px}
+      .dot{left:6px}
+    }
+    footer{border-top:1px solid var(--line);padding:26px 20px;margin-top:30px}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+      <nav>
+        <div class="brand"><img src="assets/logo.png" alt="TikkoX"><span>TikkoX</span></div>
+        <a href="index.html">Home</a>
+        <div class="spacer"></div>
+        <a class="btn" href="https://explorer.tikkox.com">Explorer</a>
+        <a class="btn" href="https://wallet.tikkox.com">Wallet</a>
+      </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>Roadmap</h1>
+    <p class="muted">A clear path of what is completed, in progress and coming next — across core products and the wider TikkoX ecosystem.</p>
+  </div>
+</section>
+
+<div class="timeline wrap">
+
+  <!-- Completed -->
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Blockchain: TikkoX Chain</b> <span class="tag done">Completed</span></div>
+      <p class="muted">Substrate node with TKOX (decimals 8), secure WebSocket, Sudo controls.</p>
+    </div>
+  </div>
+
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Explorer</b> <span class="tag done">Completed</span></div>
+      <p class="muted">Live blocks/tx/accounts, global search and golden-black UI.</p>
+    </div>
+  </div>
+
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Wallet</b> <span class="tag done">Completed</span></div>
+      <p class="muted">Create/secure accounts, hold TKOX; foundation for multi-asset custody.</p>
+    </div>
+  </div>
+
+  <!-- In Progress -->
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>TikkoX Pay</b> <span class="tag prog">In Progress</span></div>
+      <p class="muted">Payments, transfers and trading integrated into the network UI.</p>
+    </div>
+  </div>
+
+  <!-- Next Up: big ecosystem list from your message -->
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Open Ecosystem: “Build anything”</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Network supports projects of all kinds with docs, SDKs, faucet and grants.</p>
+    </div>
+  </div>
+
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Global Social Platform</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Large-scale social app: videos, posts and real-time communication.</p>
+    </div>
+  </div>
+
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Donations Hub</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">People request help; donors support transparently on-chain.</p>
+    </div>
+  </div>
+
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Real Estate Marketplace</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Buy, sell and rent properties with verified listings and escrow flows.</p>
+    </div>
+  </div>
+
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Global Marketplace</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Groceries, home supplies and tech — merchant onboarding and logistics.</p>
+    </div>
+  </div>
+
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Finance & Tech News Portal</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Editorial/news platform with on-chain transparency for sources.</p>
+    </div>
+  </div>
+
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>TikkoX Ventures</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Funding promising TikkoX projects for revenue share per investment.</p>
+    </div>
+  </div>
+
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Global Auctions</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Auctions for everything with on-chain bids and fair settlement.</p>
+    </div>
+  </div>
+
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Cars Market (new & used)</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Buy/sell cars with verified ownership and secure payments.</p>
+    </div>
+  </div>
+
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>AI Fake-News Detector</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">AI-assisted fact checks and provenance tracking.</p>
+    </div>
+  </div>
+
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Jobs Platform</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Hiring board; example fee model: €1 per hour billed to employers.</p>
+    </div>
+  </div>
+
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Travel Tickets & Bookings</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Flights, hotels and tours with multi-currency checkout.</p>
+    </div>
+  </div>
+
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Book Swap Network</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Monthly subscription; swap books peer-to-peer, shipping optimized.</p>
+    </div>
+  </div>
+
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Instant Money Transfers</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Global send/receive; cash-out options and multiple payment rails.</p>
+    </div>
+  </div>
+
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Healthy Food App</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Monthly subscription; daily healthy recipes and cooking guidance.</p>
+    </div>
+  </div>
+
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Legacy & Assets Vault</b> <span class="tag next">Next Up</span></div>
+      <p class="muted">Store projects, properties and financial info; grant access to family by policy or time lock.</p>
+    </div>
+  </div>
+
+  <!-- Placeholders 18–20 if you want to add later -->
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Project 18</b> <span class="tag next">To be announced</span></div>
+      <p class="muted">Reserved for community proposals.</p>
+    </div>
+  </div>
+  <div class="item right">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Project 19</b> <span class="tag next">To be announced</span></div>
+      <p class="muted">Reserved for community proposals.</p>
+    </div>
+  </div>
+  <div class="item left">
+    <span class="dot"></span>
+    <div class="card">
+      <div class="title"><b>Project 20</b> <span class="tag next">To be announced</span></div>
+      <p class="muted">Reserved for community proposals.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+    <div>© TikkoX Blockchain</div>
+    <div><a href="index.html">Back to Home</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

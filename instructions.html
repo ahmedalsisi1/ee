@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TikkoX • Instructions</title>
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <style>
+    :root{--bg:#000;--fg:#d4af37;--fg2:#b9992a;--card:#0b0b0b;--line:#151515}
+    *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    a{color:var(--fg);text-decoration:none} .wrap{max-width:1000px;margin:auto;padding:20px}
+    header{position:sticky;top:0;background:#050505cc;backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+    h1{font-size:28px} .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+    .muted{color:var(--fg2)}
+  </style>
+</head>
+<body>
+<header><div class="wrap"><a href="index.html">← Home</a></div></header>
+<main class="wrap">
+  <h1>Instructions</h1>
+  <div class="card">
+    <h3>Users</h3>
+    <ol>
+      <li>Create a wallet: <a href="https://wallet.tikkox.com">wallet.tikkox.com</a></li>
+      <li>Explore blocks and transactions: <a href="https://explorer.tikkox.com">explorer.tikkox.com</a></li>
+      <li>Keep your seed phrase secured and offline.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>Developers</h3>
+    <ol>
+      <li>Read the docs: <a href="https://tikkox.org/docs">tikkox.org/docs</a></li>
+      <li>Use the API/RPC endpoints listed in the docs.</li>
+      <li>Test on the faucet-enabled testnet (details in docs).</li>
+      <li>Submit issues or PRs on <a href="https://github.com/tikkox">GitHub</a>.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>Support</h3>
+    <p class="muted">For general questions, email: <a href="mailto:contact@tikkox.com">contact@tikkox.com</a></p>
+  </div>
+</main>
+</body>
+</html>
