@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -7,11 +8,11 @@
 <title>TikkoX Live Code Playground — Black & Gold</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#000000">
+<!-- Best-effort CSP (headers أقوى، لكن هذه مفيدة للنسخة الساكنة) -->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self' data: blob:; img-src 'self' data: blob:; media-src 'self' data: blob:; style-src 'unsafe-inline' 'self'; script-src 'unsafe-inline' 'self'; frame-src 'self' data: blob:; connect-src 'self'">
 <style>
-:root{
-  --bg:#000; --fg:#d4af37; --fg2:#b9992a; --card:#0b0b0b; --line:#151515;
-  --good:#27ae60; --bad:#e74c3c; --muted:#a6a6a6;
-}
+:root{ --bg:#000; --fg:#d4af37; --fg2:#b9992a; --card:#0b0b0b; --line:#151515; --good:#27ae60; --bad:#e74c3c; --muted:#a6a6a6 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
 a{color:var(--fg);text-decoration:none}
@@ -45,7 +46,8 @@ main .grid{display:grid;gap:16px}
 .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .tab{border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--fg2)}
 .tab.active{border-color:var(--fg);color:var(--fg);box-shadow:0 0 0 1px var(--fg) inset}
-textarea{width:100%;min-height:240px;background:#0b0b0b;border:1px solid var(--line);border-radius:10px;color:#eee;padding:10px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+textarea{width:100%;min-height:240px;background:#0b0b0b;border:1px solid var(--line);border-radius:10px;color:#eee;padding:10px;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace; resize:vertical}
 .editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 
 /* Preview */
@@ -55,14 +57,22 @@ iframe{width:100%;height:100%;border:0;background:#fff}
 .status.ok{border-color:var(--good);color:var(--good)}
 .status.err{border-color:var(--bad);color:var(--bad)}
 
+/* Error panel */
+.error-panel{margin-top:8px;background:#1a0f10;border:1px solid #361b1d;border-radius:10px;padding:10px;display:none}
+.error-panel pre{margin:0;color:#ffb3b3;white-space:pre-wrap;word-wrap:break-word}
+.error-panel .title{color:#ff8a8a;font-weight:700;margin-bottom:6px}
+
 /* Hero */
 .hero{padding:20px 0 0}
 .hero h1{color:var(--fg);font-size:clamp(24px,4vmax,40px);margin:10px 0 6px}
 .hero p{color:var(--fg2);margin:0}
 
-/* Footer */
+/* Footer + animated logo */
 footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var(--fg2)}
-.notice{font-size:13px;color:var(--fg2)}
+.footer-logo{margin-top:10px;display:inline-grid;place-items:center}
+.footer-logo .mark{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,#d4af37,#8c6f1d);
+  color:#000;font-weight:900;display:grid;place-items:center;animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-6px)}}
 </style>
 </head>
 <body>
@@ -71,8 +81,9 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
   <div class="wrap">
     <nav class="top">
       <div class="brand">
-        <!-- Put your logo file next to this index.html as: logo.png -->
-        <img id="logo" src="logo.png" alt="TikkoX Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <!-- ضع شعارك باسم logo.png بجوار هذا الملف -->
+        <img id="logo" src="logo.png" alt="TikkoX Logo"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
         <div class="fallback">TX</div>
         <span>TikkoX • Live Code Playground</span>
       </div>
@@ -83,6 +94,8 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
         <label class="switch"><input id="blockNet" type="checkbox" checked> Block Network</label>
         <label class="switch"><input id="liveEdit" type="checkbox"> Live Edit (HTML)</label>
         <button id="runBtn" class="btn primary">Run ▶</button>
+        <button id="refreshBtn" class="btn">Refresh ⟳</button>
+        <button id="shareBtn" class="btn">Share Link</button>
         <button id="downloadBtn" class="btn">Download .html</button>
         <button id="resetBtn" class="btn ghost">Reset Example</button>
         <button id="clearBtn" class="btn danger">Clear All</button>
@@ -94,7 +107,7 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
 <section class="hero">
   <div class="wrap">
     <h1>Black & Gold Live Playground</h1>
-    <p>Write or paste HTML/CSS/JS, run it safely in an isolated preview, <b>edit text live</b> and see it sync back to HTML code.</p>
+    <p>Write or paste HTML/CSS/JS, run it safely in an isolated preview. <b>Live Edit</b> lets you edit text directly in the preview and sync it back.</p>
   </div>
 </section>
 
@@ -119,6 +132,12 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
         <button class="btn ghost" id="copyFull">Copy Full Page</button>
         <span id="status" class="status">Ready</span>
       </div>
+
+      <!-- أخطاء البناء/التشغيل -->
+      <div id="errorPanel" class="error-panel">
+        <div class="title">Error</div>
+        <pre id="errorText"></pre>
+      </div>
     </div>
 
     <!-- Preview -->
@@ -139,17 +158,22 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
   <div class="panel" style="margin-top:16px">
     <h3 style="margin:6px 0;color:var(--fg)">About this tool</h3>
     <ul class="notice">
-      <li><b>Free</b> for everyone from <b>TikkoX</b>.</li>
-      <li><b>No code is stored</b> on our servers; everything runs in your browser. Please <b>do not paste sensitive secrets</b>.</li>
-      <li><b>Live Edit</b> lets you edit text directly in the preview; changes sync back to the HTML editor. (CSS/JS edits are from the editors only.)</li>
+      <li><b>Free</b> for everyone from <b>TikkoX</b>. No sign-in needed.</li>
+      <li><b>No code is stored</b>; everything runs in your browser. Please <b>do not paste sensitive secrets</b>.</li>
+      <li><b>Share</b>: use “Share Link” to generate a URL that encodes your code (opens on any device).</li>
       <li><b>Block Network</b> prevents <code>fetch/XMLHttpRequest/window.open</code> inside the preview for safety.</li>
       <li>Use <b>Copy Full Page</b> or <b>Download .html</b> to get a deploy-ready file.</li>
     </ul>
+
+    <!-- شعار متحرّك أسفل التعليمات -->
+    <div class="footer-logo">
+      <div class="mark">TX</div>
+    </div>
   </div>
 </main>
 
 <footer>
-  © 2025 TikkoX — Live Code Playground. Black & Gold theme. Keep building. 🚀
+  © 2025 TikkoX — Live Code Playground. Black & Gold theme. Safe by default. 🚀
 </footer>
 
 <script>
@@ -160,18 +184,22 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
     css:  document.getElementById('cssBox'),
     js:   document.getElementById('jsBox')
   };
-  const iframe     = document.getElementById('preview');
-  const runBtn     = document.getElementById('runBtn');
-  const resetBtn   = document.getElementById('resetBtn');
-  const clearBtn   = document.getElementById('clearBtn');
-  const downloadBtn= document.getElementById('downloadBtn');
-  const status     = document.getElementById('status');
-  const autoRun    = document.getElementById('autoRun');
-  const blockNet   = document.getElementById('blockNet');
-  const liveEdit   = document.getElementById('liveEdit');
-  const copyFull   = document.getElementById('copyFull');
+  const iframe      = document.getElementById('preview');
+  const runBtn      = document.getElementById('runBtn');
+  const refreshBtn  = document.getElementById('refreshBtn');
+  const resetBtn    = document.getElementById('resetBtn');
+  const clearBtn    = document.getElementById('clearBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const shareBtn    = document.getElementById('shareBtn');
+  const status      = document.getElementById('status');
+  const autoRun     = document.getElementById('autoRun');
+  const blockNet    = document.getElementById('blockNet');
+  const liveEdit    = document.getElementById('liveEdit');
+  const copyFull    = document.getElementById('copyFull');
+  const errPanel    = document.getElementById('errorPanel');
+  const errText     = document.getElementById('errorText');
 
-  // Starter example (beautiful landing)
+  // Starter example
   const starter = {
     html: `<section class="hero">
   <h1>Welcome to <span class="gold">TikkoX</span></h1>
@@ -194,12 +222,37 @@ a{color:#d4af37}`,
     js: `console.log("TikkoX Live Playground ready!")`
   };
 
-  // Init (no persistence: nothing saved)
-  boxes.html.value = starter.html;
-  boxes.css.value  = starter.css;
-  boxes.js.value   = starter.js;
+  /* ---------- URL Share (encode/decode) ---------- */
+  function encodeState(){
+    try{
+      const obj = {h: boxes.html.value, c: boxes.css.value, j: boxes.js.value};
+      const str = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(obj)))));
+      return '#tkx='+str;
+    }catch(e){ console.warn('encode failed', e); return ''; }
+  }
+  function decodeState(hash){
+    try{
+      if(!hash.startsWith('#tkx=')) return null;
+      const b64 = decodeURIComponent(hash.slice(5));
+      const json = decodeURIComponent(escape(atob(b64)));
+      return JSON.parse(json);
+    }catch(e){ console.warn('decode failed', e); return null; }
+  }
+  // Load from URL if present
+  (function loadFromHash(){
+    const st = decodeState(location.hash);
+    if(st){
+      boxes.html.value = st.h ?? starter.html;
+      boxes.css.value  = st.c ?? starter.css;
+      boxes.js.value   = st.j ?? starter.js;
+    }else{
+      boxes.html.value = starter.html;
+      boxes.css.value  = starter.css;
+      boxes.js.value   = starter.js;
+    }
+  })();
 
-  // Tabs
+  // Tabs logic
   tabs.forEach(t=>{
     t.addEventListener('click', ()=>{
       tabs.forEach(x=>x.classList.remove('active'));
@@ -209,70 +262,102 @@ a{color:#d4af37}`,
     });
   });
 
-  // Build preview document
+  // Build preview document (with safety + error posting + live edit)
   function makeDoc(html, css, js, blockNetwork, live) {
+    const cspMeta = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; media-src data: blob:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'">`;
     const netBlocker = blockNetwork ? `
+      <script>(function(){const deny=()=>{throw new Error('Network blocked in preview')};const nop=()=>{};
+        window.fetch=deny; window.XMLHttpRequest=function(){deny()}; window.open=nop;
+        if('navigator' in window){ try{navigator.sendBeacon = nop}catch(e){} }
+      })();<\/script>` : '';
+
+    const errorHooks = `
       <script>
       (function(){
-        const deny = ()=>{ throw new Error('Network blocked in preview'); };
-        const nop = ()=>{};
-        window.fetch = deny;
-        window.XMLHttpRequest = function(){ deny(); };
-        window.open = nop;
-        if ('navigator' in window) { try { navigator.sendBeacon = nop; } catch(e){} }
-      })();
-      <\/script>` : '';
+        window.addEventListener('error', function(e){
+          try{ parent.postMessage({type:'tkx-error', msg: String(e.message||'Error'),
+            stack: String((e.error && e.error.stack) || e.filename+':'+e.lineno+':'+e.colno) }, '*'); }catch(_){}
+        });
+        window.addEventListener('unhandledrejection', function(e){
+          try{ parent.postMessage({type:'tkx-error', msg: String(e.reason && (e.reason.message||e.reason) || 'Promise rejection'),
+            stack: String(e.reason && e.reason.stack || '') }, '*'); }catch(_){}
+        });
+      })();<\/script>`;
 
     const liveEditHook = live ? `
-      <script>
-      (function(){
+      <script>(function(){
         document.body.setAttribute('contenteditable','true');
         Array.from(document.querySelectorAll('script,style')).forEach(n=>n.setAttribute('contenteditable','false'));
         const app = document.getElementById('app'); if (app) app.setAttribute('contenteditable','true');
         let timer=null;
         document.addEventListener('input', ()=>{
           clearTimeout(timer);
-          timer = setTimeout(()=>{
-            const root = document.getElementById('app') || document.body;
+          timer=setTimeout(()=>{
+            const root = document.getElementById('app')||document.body;
             parent.postMessage({ type:'tkx-html-changed', html: root.innerHTML }, '*');
           }, 250);
         });
-      })();
-      <\/script>` : '';
+      })();<\/script>` : '';
 
-    return `<!doctype html>
-<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    // Note: we append a //# sourceURL to help stack traces hint at "user.js".
+    return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+${blockNetwork ? cspMeta : '' }
 <title>TikkoX Preview</title>
 <style id="user-style">${css}</style>
 <div id="app">
 ${html}
 </div>
 ${netBlocker}
-<script>
-try{ ${js} }catch(err){
+${errorHooks}
+<script>try{ ${js}\n//# sourceURL=user.js }catch(err){
+  try{ parent.postMessage({type:'tkx-error', msg:String(err.message||err), stack:String(err.stack||'') }, '*'); }catch(_){}
   document.body.insertAdjacentHTML('beforeend','<pre style="color:#e74c3c;background:#111;padding:12px;border-radius:8px;overflow:auto">'+(err && (err.stack||err.message||err))+'</pre>');
   console.error(err);
-}
-<\/script>
+}<\/script>
 ${liveEditHook}`;
   }
 
-  // Render into iframe
+  // Render
+  function clearError(){ errPanel.style.display='none'; errText.textContent=''; }
+  function showError(msg, stack){
+    errPanel.style.display='block';
+    errText.textContent = (msg||'Error') + (stack?('\n'+stack):'');
+    status.className='status err'; status.textContent='Error';
+    // Try to extract line number like : <anonymous>:123:45 or user.js:123:45
+    const m = /:(\d+):(\d+)/.exec(stack||'') || /user\.js:(\d+):(\d+)/.exec(stack||'');
+    if(m){
+      const line = parseInt(m[1],10);
+      // Try to focus near that line in JS textarea
+      const code = boxes.js.value.split('\n');
+      let pos = 0;
+      for(let i=0;i<Math.min(line-1, code.length);i++) pos += code[i].length + 1;
+      boxes.js.focus();
+      boxes.js.setSelectionRange(pos, pos);
+      // scroll into view
+      const lh = 18; // approx line height
+      boxes.js.scrollTop = Math.max(0, (line-3)*lh);
+    }
+  }
   function render(){
     try{
+      clearError();
       const doc = makeDoc(boxes.html.value, boxes.css.value, boxes.js.value, blockNet.checked, liveEdit.checked);
       iframe.srcdoc = doc;
       status.className = 'status ok';
       status.textContent = 'Ran successfully';
     }catch(e){
-      status.className = 'status err';
-      status.textContent = 'Build error';
+      showError('Build error', (e && (e.stack||e.message))||'');
       console.error(e);
     }
   }
 
-  // Run & Auto-run
+  // Buttons
   runBtn.addEventListener('click', render);
+  refreshBtn.addEventListener('click', ()=>{ // force a hard refresh of iframe
+    const old = iframe.srcdoc; iframe.srcdoc = ' '; setTimeout(()=>{ iframe.srcdoc = old; }, 0);
+    status.className='status'; status.textContent='Refreshed';
+    clearError();
+  });
   [boxes.html, boxes.css, boxes.js].forEach(el=>{
     el.addEventListener('input', ()=>{ if(autoRun.checked) render(); });
   });
@@ -283,13 +368,13 @@ ${liveEditHook}`;
     boxes.html.value = starter.html;
     boxes.css.value  = starter.css;
     boxes.js.value   = starter.js;
-    render();
+    clearError(); render();
   });
   clearBtn.addEventListener('click', ()=>{
     boxes.html.value = '';
     boxes.css.value  = '';
     boxes.js.value   = '';
-    render();
+    clearError(); render();
   });
 
   // Copy (sections) + Copy Full + Download
@@ -312,7 +397,7 @@ ${boxes.html.value}
 ${boxes.js.value}
 <\/script>`;
   }
-  document.getElementById('copyFull').addEventListener('click', async ()=>{
+  copyFull.addEventListener('click', async ()=>{
     await navigator.clipboard.writeText(buildFullFile());
     status.className='status ok'; status.textContent='Full page copied';
     setTimeout(()=>{status.className='status'; status.textContent='Ready';},1500);
@@ -324,13 +409,35 @@ ${boxes.js.value}
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   });
 
+  // Share link (URL encodes your code)
+  shareBtn.addEventListener('click', async ()=>{
+    const hash = encodeState();
+    const link = location.origin + location.pathname + hash;
+    try{
+      if(navigator.share){
+        await navigator.share({ title:'TikkoX Playground', text:'Check this code', url: link });
+      }else{
+        await navigator.clipboard.writeText(link);
+        alert('Share link copied to clipboard!');
+      }
+    }catch(e){
+      await navigator.clipboard.writeText(link);
+      alert('Share link copied to clipboard!');
+    }
+  });
+
   // Two-way sync (Preview -> HTML editor) via postMessage
   window.addEventListener('message', (ev)=>{
-    if(!ev.data || ev.data.type !== 'tkx-html-changed') return;
-    boxes.html.value = ev.data.html;
-    status.className='status ok'; status.textContent='Synced from Live Edit';
-    if (autoRun.checked) render();
-    setTimeout(()=>{status.className='status'; status.textContent='Ready';},1200);
+    if(!ev.data) return;
+    if(ev.data.type === 'tkx-html-changed'){
+      boxes.html.value = ev.data.html;
+      status.className='status ok'; status.textContent='Synced from Live Edit';
+      if (autoRun.checked) render();
+      setTimeout(()=>{status.className='status'; status.textContent='Ready';},1200);
+    }
+    if(ev.data.type === 'tkx-error'){
+      showError(ev.data.msg, ev.data.stack);
+    }
   });
 
   // First render
