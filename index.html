@@ -1,161 +1,203 @@
+
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TikkoX • مُعاينة الكود الحيّة</title>
-  <meta name="theme-color" content="#000000">
-  <meta name="robots" content="noindex,nofollow">
-  <style>
-    :root{--bg:#000;--fg:#d4af37;--fg2:#b9992a;--card:#0b0b0b;--line:#1a1a1a;--good:#27ae60;--bad:#e74c3c}
-    *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
-    a{color:var(--fg)}
-    .wrap{max-width:1200px;margin:auto;padding:16px 20px}
-    header{position:sticky;top:0;background:#050505cc;backdrop-filter:blur(6px);border-bottom:1px solid var(--line);z-index:10}
-    nav{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:700}
-    .logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#d4af37,#8c6f1d);animation:pulse 2.5s infinite}
-    @keyframes pulse{50%{filter:drop-shadow(0 0 8px rgba(212,175,55,.55))}}
-    .spacer{flex:1}
-    .btn{border:1px solid var(--fg);padding:10px 14px;border-radius:10px;background:transparent;color:var(--fg);cursor:pointer;transition:.2s}
-    .btn:hover{transform:translateY(-1px)}
-    .btn.primary{background:linear-gradient(135deg, #d4af37, #b28a29);color:#000;border-color:#b28a29}
-    .btn.danger{border-color:var(--bad);color:var(--bad)}
-    .hint{color:var(--fg2)}
-    .grid{display:grid;grid-template-columns:1fr;gap:16px}
-    .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
-    .tabs{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-    .tab{border:1px solid var(--line);border-radius:999px;padding:6px 10px;cursor:pointer}
-    .tab.active{border-color:var(--fg);box-shadow:0 0 0 1px var(--fg) inset}
-    textarea{width:100%;min-height:240px;background:#0b0b0b;border:1px solid var(--line);border-radius:10px;color:var(--fg);padding:10px;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
-    .row{display:grid;grid-template-columns:1fr;gap:16px}
-    .preview{background:#0b0b0b;border:1px solid var(--line);border-radius:14px;height:520px;overflow:hidden;position:relative}
-    .bar{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}
-    .left, .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .status{font-size:12px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg2)}
-    .status.ok{border-color:var(--good);color:var(--good)}
-    .status.err{border-color:var(--bad);color:var(--bad)}
-    iframe{width:100%;height:100%;border:0;background:#fff}
-    .footer{border-top:1px solid var(--line);padding:18px 0;text-align:center;color:var(--fg2)}
-    @media(min-width:1024px){
-      .row{grid-template-columns:1.05fr .95fr}
-      textarea{min-height:540px}
-      .preview{height:640px}
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TikkoX Live Code Playground — Black & Gold</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#000000">
+<style>
+:root{
+  --bg:#000; --fg:#d4af37; --fg2:#b9992a; --card:#0b0b0b; --line:#151515;
+  --good:#27ae60; --bad:#e74c3c; --muted:#a6a6a6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:var(--fg);text-decoration:none}
+.wrap{max-width:1200px;margin:auto;padding:14px 20px}
+
+/* Header */
+header{position:sticky;top:0;z-index:20;background:#050505cc;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.top{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+.brand img{width:34px;height:34px;border-radius:8px;object-fit:cover;display:none}
+.brand .fallback{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#d4af37,#8c6f1d);color:#000;font-weight:900}
+@keyframes pulse{50%{filter:drop-shadow(0 0 8px rgba(212,175,55,.55))}}
+.brand .fallback{animation:pulse 2.5s infinite}
+.spacer{flex:1}
+
+.btn{border:1px solid var(--fg);color:var(--fg);background:transparent;padding:10px 14px;border-radius:10px;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,#d4af37,#b28a29);color:#000;border-color:#b28a29}
+.btn.ghost{border-color:var(--fg2)}
+.btn.danger{border-color:var(--bad);color:var(--bad)}
+.badge{border:1px solid var(--line);color:var(--fg2);border-radius:999px;padding:6px 10px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+label.switch{display:flex;gap:8px;align-items:center;color:var(--fg2);font-size:14px}
+input[type="checkbox"]{accent-color:var(--fg)}
+
+/* Layout */
+main .grid{display:grid;gap:16px}
+@media(min-width:1024px){ main .grid{grid-template-columns:1.05fr .95fr} }
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tab{border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--fg2)}
+.tab.active{border-color:var(--fg);color:var(--fg);box-shadow:0 0 0 1px var(--fg) inset}
+textarea{width:100%;min-height:240px;background:#0b0b0b;border:1px solid var(--line);border-radius:10px;color:#eee;padding:10px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+
+/* Preview */
+.preview{background:#0b0b0b;border:1px solid var(--line);border-radius:14px;height:560px;overflow:hidden;position:relative}
+iframe{width:100%;height:100%;border:0;background:#fff}
+.status{font-size:12px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg2)}
+.status.ok{border-color:var(--good);color:var(--good)}
+.status.err{border-color:var(--bad);color:var(--bad)}
+
+/* Hero */
+.hero{padding:20px 0 0}
+.hero h1{color:var(--fg);font-size:clamp(24px,4vmax,40px);margin:10px 0 6px}
+.hero p{color:var(--fg2);margin:0}
+
+/* Footer */
+footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var(--fg2)}
+.notice{font-size:13px;color:var(--fg2)}
+</style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <nav>
-        <div class="brand"><div class="logo"></div><span>TikkoX • مُعاينة الكود الحيّة</span></div>
-        <span class="hint">اكتب HTML / CSS / JS وشاهد النتيجة فورًا</span>
-        <div class="spacer"></div>
-        <button id="runBtn" class="btn primary">تشغيل الكود</button>
-        <button id="resetBtn" class="btn">إرجاع المثال</button>
-        <button id="clearBtn" class="btn danger">مسح الكل</button>
-      </nav>
-    </div>
-  </header>
 
-  <main class="wrap">
-    <div class="row">
-      <div class="panel">
-        <div class="tabs" role="tablist">
-          <div class="tab active" data-target="htmlBox">HTML</div>
-          <div class="tab" data-target="cssBox">CSS</div>
-          <div class="tab" data-target="jsBox">JavaScript</div>
-        </div>
-        <div id="boxes">
-          <textarea id="htmlBox" aria-label="HTML"></textarea>
-          <textarea id="cssBox" aria-label="CSS" hidden></textarea>
-          <textarea id="jsBox" aria-label="JavaScript" hidden></textarea>
-        </div>
-        <div class="bar" style="margin-top:10px">
-          <div class="left">
-            <label class="hint"><input type="checkbox" id="autoRun" /> تشغيل تلقائي عند الكتابة</label>
-            <label class="hint"><input type="checkbox" id="isolateNet" checked /> منع الاتصالات الخارجية (تجربة أكثر أمانًا)</label>
-          </div>
-          <div class="right">
-            <span id="status" class="status">جاهز</span>
-          </div>
-        </div>
+<header>
+  <div class="wrap">
+    <nav class="top">
+      <div class="brand">
+        <!-- Put your logo file next to this index.html as: logo.png -->
+        <img id="logo" src="logo.png" alt="TikkoX Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <div class="fallback">TX</div>
+        <span>TikkoX • Live Code Playground</span>
+      </div>
+      <span class="badge">Free for everyone</span>
+      <div class="spacer"></div>
+      <div class="controls">
+        <label class="switch"><input id="autoRun" type="checkbox"> Auto-Run</label>
+        <label class="switch"><input id="blockNet" type="checkbox" checked> Block Network</label>
+        <label class="switch"><input id="liveEdit" type="checkbox"> Live Edit (HTML)</label>
+        <button id="runBtn" class="btn primary">Run ▶</button>
+        <button id="downloadBtn" class="btn">Download .html</button>
+        <button id="resetBtn" class="btn ghost">Reset Example</button>
+        <button id="clearBtn" class="btn danger">Clear All</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>Black & Gold Live Playground</h1>
+    <p>Write or paste HTML/CSS/JS, run it safely in an isolated preview, <b>edit text live</b> and see it sync back to HTML code.</p>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="grid">
+    <!-- Editors -->
+    <div class="panel">
+      <div class="tabs" role="tablist">
+        <div class="tab active" data-target="htmlBox">HTML</div>
+        <div class="tab" data-target="cssBox">CSS</div>
+        <div class="tab" data-target="jsBox">JavaScript</div>
       </div>
 
-      <div class="panel">
-        <div class="bar" style="margin-bottom:6px">
-          <div class="left"><b>المعاينة</b> <span class="hint">ضمن iFrame معزول</span></div>
-        </div>
-        <div class="preview">
-          <iframe id="preview" sandbox="allow-scripts allow-forms" referrerpolicy="no-referrer"></iframe>
-        </div>
+      <textarea id="htmlBox" aria-label="HTML"></textarea>
+      <textarea id="cssBox" aria-label="CSS" hidden></textarea>
+      <textarea id="jsBox" aria-label="JavaScript" hidden></textarea>
+
+      <div class="editor-actions">
+        <button class="btn" data-copy="htmlBox">Copy HTML</button>
+        <button class="btn" data-copy="cssBox">Copy CSS</button>
+        <button class="btn" data-copy="jsBox">Copy JS</button>
+        <button class="btn ghost" id="copyFull">Copy Full Page</button>
+        <span id="status" class="status">Ready</span>
       </div>
     </div>
 
-    <div class="panel" style="margin-top:16px">
-      <details>
-        <summary>نصائح أمان (انقر للعرض)</summary>
-        <ul class="hint">
-          <li>المعاينة تعمل داخل <code>iframe</code> مُعزَّل (sandbox) لمنع تأثير الكود على موقعك.</li>
-          <li>خيار "منع الاتصالات الخارجية" يوقف <code>fetch/XMLHttpRequest</code> وفتح النوافذ.</li>
-          <li>لا تضع مفاتيح حساسة داخل الأكواد.</li>
-        </ul>
-      </details>
+    <!-- Preview -->
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="display:flex;gap:8px;align-items:center">
+          <b>Preview</b><span class="badge">Sandboxed</span>
+        </div>
+        <small class="notice">Tip: enable <b>Live Edit</b>, then click text and type to sync back ↑</small>
+      </div>
+      <div class="preview">
+        <iframe id="preview" sandbox="allow-scripts allow-forms" referrerpolicy="no-referrer"></iframe>
+      </div>
     </div>
-  </main>
+  </div>
 
-  <div class="wrap footer">© 2025 TikkoX • صفحة مُعاينة حيّة</div>
+  <!-- Notes -->
+  <div class="panel" style="margin-top:16px">
+    <h3 style="margin:6px 0;color:var(--fg)">About this tool</h3>
+    <ul class="notice">
+      <li><b>Free</b> for everyone from <b>TikkoX</b>.</li>
+      <li><b>No code is stored</b> on our servers; everything runs in your browser. Please <b>do not paste sensitive secrets</b>.</li>
+      <li><b>Live Edit</b> lets you edit text directly in the preview; changes sync back to the HTML editor. (CSS/JS edits are from the editors only.)</li>
+      <li><b>Block Network</b> prevents <code>fetch/XMLHttpRequest/window.open</code> inside the preview for safety.</li>
+      <li>Use <b>Copy Full Page</b> or <b>Download .html</b> to get a deploy-ready file.</li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  © 2025 TikkoX — Live Code Playground. Black & Gold theme. Keep building. 🚀
+</footer>
 
 <script>
 (function(){
-  // Elements
   const tabs = document.querySelectorAll('.tab');
-  const htmlBox = document.getElementById('htmlBox');
-  const cssBox  = document.getElementById('cssBox');
-  const jsBox   = document.getElementById('jsBox');
-  const iframe  = document.getElementById('preview');
-  const runBtn  = document.getElementById('runBtn');
-  const resetBtn= document.getElementById('resetBtn');
-  const clearBtn= document.getElementById('clearBtn');
-  const status  = document.getElementById('status');
-  const autoRun = document.getElementById('autoRun');
-  const isolateNet = document.getElementById('isolateNet');
+  const boxes = {
+    html: document.getElementById('htmlBox'),
+    css:  document.getElementById('cssBox'),
+    js:   document.getElementById('jsBox')
+  };
+  const iframe     = document.getElementById('preview');
+  const runBtn     = document.getElementById('runBtn');
+  const resetBtn   = document.getElementById('resetBtn');
+  const clearBtn   = document.getElementById('clearBtn');
+  const downloadBtn= document.getElementById('downloadBtn');
+  const status     = document.getElementById('status');
+  const autoRun    = document.getElementById('autoRun');
+  const blockNet   = document.getElementById('blockNet');
+  const liveEdit   = document.getElementById('liveEdit');
+  const copyFull   = document.getElementById('copyFull');
 
-  // Example starter
+  // Starter example (beautiful landing)
   const starter = {
-    html:
-`<section class="hero">
-  <h1>مرحبًا بك في TikkoX</h1>
-  <p>هذه معاينة حيّة — اكتب HTML/CSS/JS ثم اضغط "تشغيل الكود".</p>
-  <button class="gold">زر جميل</button>
+    html: `<section class="hero">
+  <h1>Welcome to <span class="gold">TikkoX</span></h1>
+  <p>Edit this text live (enable “Live Edit”), or change HTML/CSS/JS and hit Run.</p>
+  <button class="gold">Beautiful Button</button>
+</section>
+<section class="cards">
+  <article><h3>Fast</h3><p>Instant preview, no reloads.</p></article>
+  <article><h3>Safe</h3><p>Sandboxed with optional network blocking.</p></article>
+  <article><h3>Ready</h3><p>Copy or download a deploy-ready file.</p></article>
 </section>`,
-    css:
-`body{font-family:system-ui;background:#000;color:#d4af37;margin:0}
-.hero{min-height:60vh;display:grid;place-items:center;text-align:center;padding:40px;background:radial-gradient(ellipse,#111 0%,#000 60%)}
-.gold{border:1px solid #d4af37;color:#000;background:linear-gradient(135deg,#d4af37,#b28a29);padding:10px 14px;border-radius:12px}`,
-    js:
-`console.log("TikkoX live preview works!");`
+    css: `:root{--bg:#000;--fg:#d4af37;--fg2:#b9992a}
+body{font-family:system-ui,Segoe UI,Arial;background:#000;color:#eee;margin:0}
+.hero{min-height:52vh;display:grid;place-items:center;text-align:center;padding:48px;background:radial-gradient(ellipse,#111 0%,#000 60%)}
+.gold{background:linear-gradient(135deg,#d4af37,#b28a29);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero button.gold{border:1px solid #d4af37;color:#000;background:linear-gradient(135deg,#d4af37,#b28a29);padding:10px 14px;border-radius:12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;padding:20px}
+.cards article{background:#0b0b0b;border:1px solid #151515;border-radius:14px;padding:14px}
+a{color:#d4af37}`,
+    js: `console.log("TikkoX Live Playground ready!")`
   };
 
-  // LocalStorage keys
-  const LS = {
-    html:'tkx_prev_html',
-    css:'tkx_prev_css',
-    js:'tkx_prev_js',
-    auto:'tkx_prev_autorun',
-    net:'tkx_prev_isolate'
-  };
-
-  // Init editors with localStorage or starter
-  function init(){
-    htmlBox.value = localStorage.getItem(LS.html) ?? starter.html;
-    cssBox.value  = localStorage.getItem(LS.css)  ?? starter.css;
-    jsBox.value   = localStorage.getItem(LS.js)   ?? starter.js;
-    autoRun.checked = (localStorage.getItem(LS.auto) ?? 'false') === 'true';
-    isolateNet.checked = (localStorage.getItem(LS.net) ?? 'true') === 'true';
-    render();
-  }
+  // Init (no persistence: nothing saved)
+  boxes.html.value = starter.html;
+  boxes.css.value  = starter.css;
+  boxes.js.value   = starter.js;
 
   // Tabs
   tabs.forEach(t=>{
@@ -167,10 +209,9 @@
     });
   });
 
-  // Build preview HTML using srcdoc (no network if isolateNet)
-  function makeDoc(html, css, js, blockNet){
-    // Security shim to block network if requested
-    const netBlocker = blockNet ? `
+  // Build preview document
+  function makeDoc(html, css, js, blockNetwork, live) {
+    const netBlocker = blockNetwork ? `
       <script>
       (function(){
         const deny = ()=>{ throw new Error('Network blocked in preview'); };
@@ -178,66 +219,122 @@
         window.fetch = deny;
         window.XMLHttpRequest = function(){ deny(); };
         window.open = nop;
-        if ('navigator' in window) {
-          try { navigator.sendBeacon = nop; } catch(e){}
-        }
+        if ('navigator' in window) { try { navigator.sendBeacon = nop; } catch(e){} }
       })();
-      <\/script>
-    ` : '';
+      <\/script>` : '';
+
+    const liveEditHook = live ? `
+      <script>
+      (function(){
+        document.body.setAttribute('contenteditable','true');
+        Array.from(document.querySelectorAll('script,style')).forEach(n=>n.setAttribute('contenteditable','false'));
+        const app = document.getElementById('app'); if (app) app.setAttribute('contenteditable','true');
+        let timer=null;
+        document.addEventListener('input', ()=>{
+          clearTimeout(timer);
+          timer = setTimeout(()=>{
+            const root = document.getElementById('app') || document.body;
+            parent.postMessage({ type:'tkx-html-changed', html: root.innerHTML }, '*');
+          }, 250);
+        });
+      })();
+      <\/script>` : '';
 
     return `<!doctype html>
-<html lang="ar" dir="rtl">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TikkoX Preview</title>
-<style>${css}</style>
+<style id="user-style">${css}</style>
 <div id="app">
 ${html}
 </div>
 ${netBlocker}
 <script>
-try{
-${js}
-}catch(err){
-  document.body.insertAdjacentHTML('beforeend','<pre style="color:#e74c3c;background:#111;padding:12px;border-radius:8px;overflow:auto;direction:ltr">'+(err && (err.stack||err.message||err))+'</pre>');
+try{ ${js} }catch(err){
+  document.body.insertAdjacentHTML('beforeend','<pre style="color:#e74c3c;background:#111;padding:12px;border-radius:8px;overflow:auto">'+(err && (err.stack||err.message||err))+'</pre>');
   console.error(err);
 }
-<\/script>`;
+<\/script>
+${liveEditHook}`;
   }
 
   // Render into iframe
   function render(){
     try{
-      const doc = makeDoc(htmlBox.value, cssBox.value, jsBox.value, isolateNet.checked);
+      const doc = makeDoc(boxes.html.value, boxes.css.value, boxes.js.value, blockNet.checked, liveEdit.checked);
       iframe.srcdoc = doc;
       status.className = 'status ok';
-      status.textContent = 'تم التشغيل بنجاح';
-      // persist
-      localStorage.setItem(LS.html, htmlBox.value);
-      localStorage.setItem(LS.css,  cssBox.value);
-      localStorage.setItem(LS.js,   jsBox.value);
-      localStorage.setItem(LS.auto, autoRun.checked);
-      localStorage.setItem(LS.net,  isolateNet.checked);
+      status.textContent = 'Ran successfully';
     }catch(e){
       status.className = 'status err';
-      status.textContent = 'خطأ في البناء';
+      status.textContent = 'Build error';
       console.error(e);
     }
   }
 
-  // Events
+  // Run & Auto-run
   runBtn.addEventListener('click', render);
-  resetBtn.addEventListener('click', ()=>{ htmlBox.value = starter.html; cssBox.value = starter.css; jsBox.value = starter.js; render(); });
-  clearBtn.addEventListener('click', ()=>{ htmlBox.value=''; cssBox.value=''; jsBox.value=''; render(); });
-
-  [htmlBox, cssBox, jsBox].forEach(el=>{
-    el.addEventListener('input', ()=>{ if(autoRun.checked){ render(); } });
+  [boxes.html, boxes.css, boxes.js].forEach(el=>{
+    el.addEventListener('input', ()=>{ if(autoRun.checked) render(); });
   });
-  [autoRun, isolateNet].forEach(el=>el.addEventListener('change', render));
+  [blockNet, liveEdit].forEach(el=> el.addEventListener('change', render));
 
-  // Start
-  init();
+  // Reset / Clear
+  resetBtn.addEventListener('click', ()=>{
+    boxes.html.value = starter.html;
+    boxes.css.value  = starter.css;
+    boxes.js.value   = starter.js;
+    render();
+  });
+  clearBtn.addEventListener('click', ()=>{
+    boxes.html.value = '';
+    boxes.css.value  = '';
+    boxes.js.value   = '';
+    render();
+  });
+
+  // Copy (sections) + Copy Full + Download
+  document.querySelectorAll('[data-copy]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.getAttribute('data-copy');
+      const ta = document.getElementById(id);
+      await navigator.clipboard.writeText(ta.value);
+      status.className='status ok'; status.textContent='Copied '+id.replace('Box','').toUpperCase();
+      setTimeout(()=>{status.className='status'; status.textContent='Ready';},1500);
+    });
+  });
+  function buildFullFile(){
+    return `<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My TikkoX Build</title>
+<style>${boxes.css.value}</style>
+${boxes.html.value}
+<script>
+${boxes.js.value}
+<\/script>`;
+  }
+  document.getElementById('copyFull').addEventListener('click', async ()=>{
+    await navigator.clipboard.writeText(buildFullFile());
+    status.className='status ok'; status.textContent='Full page copied';
+    setTimeout(()=>{status.className='status'; status.textContent='Ready';},1500);
+  });
+  downloadBtn.addEventListener('click', ()=>{
+    const blob = new Blob([buildFullFile()], {type:'text/html'});
+    const url  = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement('a'), {href:url, download:'tikkox-build.html'});
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  // Two-way sync (Preview -> HTML editor) via postMessage
+  window.addEventListener('message', (ev)=>{
+    if(!ev.data || ev.data.type !== 'tkx-html-changed') return;
+    boxes.html.value = ev.data.html;
+    status.className='status ok'; status.textContent='Synced from Live Edit';
+    if (autoRun.checked) render();
+    setTimeout(()=>{status.className='status'; status.textContent='Ready';},1200);
+  });
+
+  // First render
+  render();
 })();
 </script>
 </body>
