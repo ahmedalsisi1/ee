@@ -1,34 +1,28 @@
-
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TikkoX Live Code Playground — Black & Gold</title>
+<title>TikkoX Code — Live Playground (Black & Gold)</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#000000">
-<!-- Best-effort CSP (headers أقوى، لكن هذه مفيدة للنسخة الساكنة) -->
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'self' data: blob:; img-src 'self' data: blob:; media-src 'self' data: blob:; style-src 'unsafe-inline' 'self'; script-src 'unsafe-inline' 'self'; frame-src 'self' data: blob:; connect-src 'self'">
 <style>
-:root{ --bg:#000; --fg:#d4af37; --fg2:#b9992a; --card:#0b0b0b; --line:#151515; --good:#27ae60; --bad:#e74c3c; --muted:#a6a6a6 }
+:root{ --bg:#000; --fg:#d4af37; --fg2:#b9992a; --card:#0b0b0b; --line:#151515;
+       --good:#27ae60; --bad:#e74c3c; --muted:#a6a6a6 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
 a{color:var(--fg);text-decoration:none}
 .wrap{max-width:1200px;margin:auto;padding:14px 20px}
-
-/* Header */
+/* header */
 header{position:sticky;top:0;z-index:20;background:#050505cc;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 nav.top{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
-.brand img{width:34px;height:34px;border-radius:8px;object-fit:cover;display:none}
+.brand img{width:34px;height:34px;border-radius:8px;object-fit:cover}
 .brand .fallback{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;
   background:linear-gradient(135deg,#d4af37,#8c6f1d);color:#000;font-weight:900}
-@keyframes pulse{50%{filter:drop-shadow(0 0 8px rgba(212,175,55,.55))}}
-.brand .fallback{animation:pulse 2.5s infinite}
 .spacer{flex:1}
-
 .btn{border:1px solid var(--fg);color:var(--fg);background:transparent;padding:10px 14px;border-radius:10px;cursor:pointer;transition:.2s}
 .btn:hover{transform:translateY(-1px)}
 .btn.primary{background:linear-gradient(135deg,#d4af37,#b28a29);color:#000;border-color:#b28a29}
@@ -38,66 +32,72 @@ nav.top{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 label.switch{display:flex;gap:8px;align-items:center;color:var(--fg2);font-size:14px}
 input[type="checkbox"]{accent-color:var(--fg)}
-
-/* Layout */
+/* layout */
 main .grid{display:grid;gap:16px}
 @media(min-width:1024px){ main .grid{grid-template-columns:1.05fr .95fr} }
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
 .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .tab{border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--fg2)}
 .tab.active{border-color:var(--fg);color:var(--fg);box-shadow:0 0 0 1px var(--fg) inset}
-textarea{width:100%;min-height:240px;background:#0b0b0b;border:1px solid var(--line);border-radius:10px;color:#eee;padding:10px;
-  font-family:ui-monospace,SFMono-Regular,Consolas,monospace; resize:vertical}
+/* editors (contenteditable + highlight) */
+.editor{min-height:240px;outline:none;white-space:pre;overflow:auto;padding:10px;border:1px solid var(--line);border-radius:10px;background:#0b0b0b;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.token.tag{color:#7aa2f7}
+.token.attr{color:#e0af68}
+.token.string{color:#9ece6a}
+.token.comment{color:#565f89}
+.token.keyword{color:#bb9af7}
+.token.number{color:#ff9e64}
 .editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-
-/* Preview */
+/* preview */
 .preview{background:#0b0b0b;border:1px solid var(--line);border-radius:14px;height:560px;overflow:hidden;position:relative}
 iframe{width:100%;height:100%;border:0;background:#fff}
 .status{font-size:12px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg2)}
 .status.ok{border-color:var(--good);color:var(--good)}
 .status.err{border-color:var(--bad);color:var(--bad)}
-
-/* Error panel */
+/* errors */
 .error-panel{margin-top:8px;background:#1a0f10;border:1px solid #361b1d;border-radius:10px;padding:10px;display:none}
 .error-panel pre{margin:0;color:#ffb3b3;white-space:pre-wrap;word-wrap:break-word}
 .error-panel .title{color:#ff8a8a;font-weight:700;margin-bottom:6px}
-
-/* Hero */
-.hero{padding:20px 0 0}
-.hero h1{color:var(--fg);font-size:clamp(24px,4vmax,40px);margin:10px 0 6px}
+/* hero + bg logo */
+.hero{padding:24px 0 0;position:relative;overflow:hidden}
+.hero h1{color:var(--fg);font-size:clamp(24px,4vmax,42px);margin:10px 0 6px}
 .hero p{color:var(--fg2);margin:0}
-
-/* Footer + animated logo */
+.bg-logo{position:absolute;inset:auto;left:50%;top:40%;width:min(420px,70vw);opacity:.06;transform:translate(-50%,-50%);animation:float 5s ease-in-out infinite}
+@keyframes float{50%{transform:translate(-50%,-56%)}}
+/* footer */
 footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var(--fg2)}
 .footer-logo{margin-top:10px;display:inline-grid;place-items:center}
 .footer-logo .mark{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,#d4af37,#8c6f1d);
   color:#000;font-weight:900;display:grid;place-items:center;animation:float 3s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-6px)}}
+/* uploads list */
+.files{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.file-pill{border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:#0e0e0e;color:#ddd;font-size:12px}
 </style>
 </head>
 <body>
-
 <header>
   <div class="wrap">
     <nav class="top">
       <div class="brand">
-        <!-- ضع شعارك باسم logo.png بجوار هذا الملف -->
-        <img id="logo" src="logo.png" alt="TikkoX Logo"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
-        <div class="fallback">TX</div>
-        <span>TikkoX • Live Code Playground</span>
+        <img src="logo.svg" alt="TikkoX Logo" onerror="this.style.display='none'">
+        <div class="fallback" style="display:none">TX</div>
+        <span>TikkoX • Code Arena</span>
       </div>
-      <span class="badge">Free for everyone</span>
+      <span class="badge">Free • Private • Sandboxed</span>
       <div class="spacer"></div>
       <div class="controls">
-        <label class="switch"><input id="autoRun" type="checkbox"> Auto-Run</label>
+        <label class="switch"><input id="autoRun" type="checkbox" checked> Auto-Run</label>
         <label class="switch"><input id="blockNet" type="checkbox" checked> Block Network</label>
         <label class="switch"><input id="liveEdit" type="checkbox"> Live Edit (HTML)</label>
+        <input id="uploader" type="file" multiple hidden accept=".png,.jpg,.jpeg,.gif,.webp,.svg,.css,.js,.html,.txt"/>
+        <button id="uploadBtn" class="btn">Add Files</button>
+        <button id="micBtn" class="btn">🎤 Speak</button>
         <button id="runBtn" class="btn primary">Run ▶</button>
         <button id="refreshBtn" class="btn">Refresh ⟳</button>
         <button id="shareBtn" class="btn">Share Link</button>
         <button id="downloadBtn" class="btn">Download .html</button>
         <button id="resetBtn" class="btn ghost">Reset Example</button>
+        <button id="beautifyBtn" class="btn ghost">Beautify Code</button>
         <button id="clearBtn" class="btn danger">Clear All</button>
       </div>
     </nav>
@@ -105,42 +105,40 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
 </header>
 
 <section class="hero">
+  <img class="bg-logo" aria-hidden="true" src="logo.svg"/>
   <div class="wrap">
-    <h1>Black & Gold Live Playground</h1>
-    <p>Write or paste HTML/CSS/JS, run it safely in an isolated preview. <b>Live Edit</b> lets you edit text directly in the preview and sync it back.</p>
+    <h1>Welcome — مرحبًا بكم في <b>TikkoX Code</b> 👋</h1>
+    <p>Write, run, and share. No sign‑up. No storage. Just pure creation. (We keep your code locally for 24h so you don’t lose it 😉)</p>
   </div>
 </section>
 
 <main class="wrap">
   <div class="grid">
-    <!-- Editors -->
     <div class="panel">
       <div class="tabs" role="tablist">
-        <div class="tab active" data-target="htmlBox">HTML</div>
-        <div class="tab" data-target="cssBox">CSS</div>
-        <div class="tab" data-target="jsBox">JavaScript</div>
+        <div class="tab active" data-target="htmlEd">HTML</div>
+        <div class="tab" data-target="cssEd">CSS</div>
+        <div class="tab" data-target="jsEd">JavaScript</div>
       </div>
-
-      <textarea id="htmlBox" aria-label="HTML"></textarea>
-      <textarea id="cssBox" aria-label="CSS" hidden></textarea>
-      <textarea id="jsBox" aria-label="JavaScript" hidden></textarea>
+      <pre id="htmlEd" class="editor" contenteditable="true" spellcheck="false" aria-label="HTML"></pre>
+      <pre id="cssEd"  class="editor" contenteditable="true" spellcheck="false" aria-label="CSS" hidden></pre>
+      <pre id="jsEd"   class="editor" contenteditable="true" spellcheck="false" aria-label="JavaScript" hidden></pre>
 
       <div class="editor-actions">
-        <button class="btn" data-copy="htmlBox">Copy HTML</button>
-        <button class="btn" data-copy="cssBox">Copy CSS</button>
-        <button class="btn" data-copy="jsBox">Copy JS</button>
+        <button class="btn" data-copy="htmlEd">Copy HTML</button>
+        <button class="btn" data-copy="cssEd">Copy CSS</button>
+        <button class="btn" data-copy="jsEd">Copy JS</button>
         <button class="btn ghost" id="copyFull">Copy Full Page</button>
         <span id="status" class="status">Ready</span>
       </div>
 
-      <!-- أخطاء البناء/التشغيل -->
       <div id="errorPanel" class="error-panel">
-        <div class="title">Error</div>
+        <div class="title">Errors & Warnings</div>
         <pre id="errorText"></pre>
       </div>
+      <div class="files" id="files"></div>
     </div>
 
-    <!-- Preview -->
     <div class="panel">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <div style="display:flex;gap:8px;align-items:center">
@@ -154,64 +152,85 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
     </div>
   </div>
 
-  <!-- Notes -->
   <div class="panel" style="margin-top:16px">
     <h3 style="margin:6px 0;color:var(--fg)">About this tool</h3>
     <ul class="notice">
-      <li><b>Free</b> for everyone from <b>TikkoX</b>. No sign-in needed.</li>
-      <li><b>No code is stored</b>; everything runs in your browser. Please <b>do not paste sensitive secrets</b>.</li>
-      <li><b>Share</b>: use “Share Link” to generate a URL that encodes your code (opens on any device).</li>
-      <li><b>Block Network</b> prevents <code>fetch/XMLHttpRequest/window.open</code> inside the preview for safety.</li>
-      <li>Use <b>Copy Full Page</b> or <b>Download .html</b> to get a deploy-ready file.</li>
+      <li><b>Welcome to TikkoX Code!</b> Sprinkle ideas, smash Run, and ship 🚀</li>
+      <li><b>Safe by default</b>: sandbox + optional network block.</li>
+      <li><b>Persistence</b>: your code is kept in your browser for 24h (never sent to our servers).</li>
+      <li><b>Share</b>: “Share Link” encodes your code in the URL.</li>
+      <li><b>Uploads</b>: add images/files; use the copied Data‑URL in your HTML.</li>
+      <li>Avoid pasting secrets. Have fun and build with <b>TikkoX</b>!</li>
     </ul>
-
-    <!-- شعار متحرّك أسفل التعليمات -->
-    <div class="footer-logo">
-      <div class="mark">TX</div>
-    </div>
+    <div class="footer-logo"><div class="mark">TX</div></div>
   </div>
 </main>
 
-<footer>
-  © 2025 TikkoX — Live Code Playground. Black & Gold theme. Safe by default. 🚀
-</footer>
+<footer>© 2025 TikkoX — Code Arena. Black & Gold forever.</footer>
 
 <script>
 (function(){
-  const tabs = document.querySelectorAll('.tab');
-  const boxes = {
-    html: document.getElementById('htmlBox'),
-    css:  document.getElementById('cssBox'),
-    js:   document.getElementById('jsBox')
-  };
-  const iframe      = document.getElementById('preview');
-  const runBtn      = document.getElementById('runBtn');
-  const refreshBtn  = document.getElementById('refreshBtn');
-  const resetBtn    = document.getElementById('resetBtn');
-  const clearBtn    = document.getElementById('clearBtn');
-  const downloadBtn = document.getElementById('downloadBtn');
-  const shareBtn    = document.getElementById('shareBtn');
-  const status      = document.getElementById('status');
-  const autoRun     = document.getElementById('autoRun');
-  const blockNet    = document.getElementById('blockNet');
-  const liveEdit    = document.getElementById('liveEdit');
-  const copyFull    = document.getElementById('copyFull');
-  const errPanel    = document.getElementById('errorPanel');
-  const errText     = document.getElementById('errorText');
+  const $ = s=>document.querySelector(s), $$ = s=>Array.from(document.querySelectorAll(s));
+  const tabs = $$('.tab');
+  const eds = { html: $('#htmlEd'), css: $('#cssEd'), js: $('#jsEd') };
+  const iframe = $('#preview'), status = $('#status');
+  const errPanel = $('#errorPanel'), errText = $('#errorText');
+  const uploadBtn = $('#uploadBtn'), uploader = $('#uploader'), filesWrap = $('#files');
+  const autoRun=$('#autoRun'), blockNet=$('#blockNet'), liveEdit=$('#liveEdit');
+  const runBtn=$('#runBtn'), refreshBtn=$('#refreshBtn'), resetBtn=$('#resetBtn'), clearBtn=$('#clearBtn');
+  const downloadBtn=$('#downloadBtn'), shareBtn=$('#shareBtn'), copyFull=$('#copyFull');
+  const micBtn=$('#micBtn'), beautifyBtn=$('#beautifyBtn');
+  const STORAGE_KEY='tkx-code-v2', STORAGE_AT='tkx-code-v2-at';
 
-  // Starter example
+  function highlight(code, lang){
+    let c = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    if(lang==='html'){
+      c = c.replace(/(&lt;!--[\\s\\S]*?--&gt;)/g,'<span class="token comment">$1</span>')
+           .replace(/(&lt;\\/?)([\\w-:]+)/g,'$1<span class="token tag">$2</span>')
+           .replace(/([\\w-:]+)=(\\".*?\\"|\\'.*?\\')/g,'<span class="token attr">$1</span>=<span class="token string">$2</span>');
+    }else if(lang==='css'){
+      c = c.replace(/\\/\\*[\\s\\S]*?\\*\\//g,'<span class="token comment">$&</span>')
+           .replace(/([#.a-zA-Z0-9_-]+)\\s*(?=\\{)/g,'<span class="token tag">$1</span>')
+           .replace(/(:)\\s*([^;}{]+)/g,'$1 <span class="token string">$2</span>');
+    }else if(lang==='js'){
+      c = c.replace(/\\/\\/.*$/gm,'<span class="token comment">$&</span>')
+           .replace(/\\/\\*[\\s\\S]*?\\*\\//g,'<span class="token comment">$&</span>')
+           .replace(/\\b(const|let|var|if|else|for|while|return|function|class|new|try|catch|throw|await|async)\\b/g,'<span class="token keyword">$1</span>')
+           .replace(/(\\"(?:[^"\\\\]|\\\\.)*\\"|\\'(?:[^'\\\\]|\\\\.)*\\'|`(?:[^`\\\\]|\\\\.)*`)/g,'<span class="token string">$1</span>')
+           .replace(/\\b(\\d+(?:\\.\\d+)?)\\b/g,'<span class="token number">$1</span>');
+    }
+    return c;
+  }
+  function setEditorText(el, txt, lang){ el.dataset.raw = txt; el.innerHTML = highlight(txt, lang); }
+  function getEditorText(el){ return el.dataset.raw || ''; }
+  function bindEditor(el, lang){
+    el.addEventListener('input', ()=>{
+      const text = el.textContent;
+      setEditorText(el, text, lang);
+      if(autoRun.checked) render();
+      persist();
+    });
+  }
+  bindEditor(eds.html,'html'); bindEditor(eds.css,'css'); bindEditor(eds.js,'js');
+
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active');
+    ['htmlEd','cssEd','jsEd'].forEach(id=>document.getElementById(id).hidden=true);
+    document.getElementById(t.dataset.target).hidden=false;
+  }));
+
   const starter = {
-    html: `<section class="hero">
-  <h1>Welcome to <span class="gold">TikkoX</span></h1>
+    html:`<section class=\\"hero\\">
+  <h1>Welcome to <span class=\\"gold\\">TikkoX</span></h1>
   <p>Edit this text live (enable “Live Edit”), or change HTML/CSS/JS and hit Run.</p>
-  <button class="gold">Beautiful Button</button>
+  <button class=\\"gold\\">Beautiful Button</button>
 </section>
-<section class="cards">
+<section class=\\"cards\\">
   <article><h3>Fast</h3><p>Instant preview, no reloads.</p></article>
   <article><h3>Safe</h3><p>Sandboxed with optional network blocking.</p></article>
   <article><h3>Ready</h3><p>Copy or download a deploy-ready file.</p></article>
 </section>`,
-    css: `:root{--bg:#000;--fg:#d4af37;--fg2:#b9992a}
+    css:`:root{--bg:#000;--fg:#d4af37;--fg2:#b9992a}
 body{font-family:system-ui,Segoe UI,Arial;background:#000;color:#eee;margin:0}
 .hero{min-height:52vh;display:grid;place-items:center;text-align:center;padding:48px;background:radial-gradient(ellipse,#111 0%,#000 60%)}
 .gold{background:linear-gradient(135deg,#d4af37,#b28a29);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -219,230 +238,194 @@ body{font-family:system-ui,Segoe UI,Arial;background:#000;color:#eee;margin:0}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;padding:20px}
 .cards article{background:#0b0b0b;border:1px solid #151515;border-radius:14px;padding:14px}
 a{color:#d4af37}`,
-    js: `console.log("TikkoX Live Playground ready!")`
+    js:`console.log(\\"TikkoX Live Playground ready!\\")`
   };
-
-  /* ---------- URL Share (encode/decode) ---------- */
-  function encodeState(){
-    try{
-      const obj = {h: boxes.html.value, c: boxes.css.value, j: boxes.js.value};
-      const str = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(obj)))));
-      return '#tkx='+str;
-    }catch(e){ console.warn('encode failed', e); return ''; }
+  function persist(){
+    const obj = {h:getEditorText(eds.html), c:getEditorText(eds.css), j:getEditorText(eds.js)};
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+    localStorage.setItem(STORAGE_AT, String(Date.now()));
   }
-  function decodeState(hash){
+  function restore(){
     try{
-      if(!hash.startsWith('#tkx=')) return null;
-      const b64 = decodeURIComponent(hash.slice(5));
-      const json = decodeURIComponent(escape(atob(b64)));
-      return JSON.parse(json);
-    }catch(e){ console.warn('decode failed', e); return null; }
+      const at = Number(localStorage.getItem(STORAGE_AT)||0);
+      if(!at || (Date.now()-at) > 24*60*60*1000) throw 0;
+      const obj = JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+      if(!obj) throw 0;
+      setEditorText(eds.html, obj.h||starter.html, 'html');
+      setEditorText(eds.css,  obj.c||starter.css,  'css');
+      setEditorText(eds.js,   obj.j||starter.js,   'js');
+      return;
+    }catch(_){}
+    setEditorText(eds.html, starter.html,'html');
+    setEditorText(eds.css,  starter.css,'css');
+    setEditorText(eds.js,   starter.js,'js');
+    persist();
   }
-  // Load from URL if present
-  (function loadFromHash(){
-    const st = decodeState(location.hash);
-    if(st){
-      boxes.html.value = st.h ?? starter.html;
-      boxes.css.value  = st.c ?? starter.css;
-      boxes.js.value   = st.j ?? starter.js;
-    }else{
-      boxes.html.value = starter.html;
-      boxes.css.value  = starter.css;
-      boxes.js.value   = starter.js;
-    }
-  })();
+  restore();
 
-  // Tabs logic
-  tabs.forEach(t=>{
-    t.addEventListener('click', ()=>{
-      tabs.forEach(x=>x.classList.remove('active'));
-      t.classList.add('active');
-      ['htmlBox','cssBox','jsBox'].forEach(id=>document.getElementById(id).hidden = true);
-      document.getElementById(t.dataset.target).hidden = false;
-    });
-  });
-
-  // Build preview document (with safety + error posting + live edit)
-  function makeDoc(html, css, js, blockNetwork, live) {
-    const cspMeta = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; media-src data: blob:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'">`;
-    const netBlocker = blockNetwork ? `
-      <script>(function(){const deny=()=>{throw new Error('Network blocked in preview')};const nop=()=>{};
-        window.fetch=deny; window.XMLHttpRequest=function(){deny()}; window.open=nop;
-        if('navigator' in window){ try{navigator.sendBeacon = nop}catch(e){} }
-      })();<\/script>` : '';
-
-    const errorHooks = `
-      <script>
-      (function(){
-        window.addEventListener('error', function(e){
-          try{ parent.postMessage({type:'tkx-error', msg: String(e.message||'Error'),
-            stack: String((e.error && e.error.stack) || e.filename+':'+e.lineno+':'+e.colno) }, '*'); }catch(_){}
-        });
-        window.addEventListener('unhandledrejection', function(e){
-          try{ parent.postMessage({type:'tkx-error', msg: String(e.reason && (e.reason.message||e.reason) || 'Promise rejection'),
-            stack: String(e.reason && e.reason.stack || '') }, '*'); }catch(_){}
-        });
-      })();<\/script>`;
-
-    const liveEditHook = live ? `
-      <script>(function(){
+  function makeDoc(html, css, js, blockNetwork, live){
+    const csp = blockNetwork ?
+      `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; media-src data: blob:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'">` : '';
+    const netBlocker = blockNetwork ? `<script>(function(){const deny=()=>{throw new Error('Network blocked in preview')};const nop=()=>{};
+      window.fetch=deny; window.XMLHttpRequest=function(){deny()}; window.open=nop; if('navigator' in window){try{navigator.sendBeacon=nop}catch(e){}}})();
+      </`+'script'>` : '';
+    const errorHooks = `<script>(function(){
+      window.addEventListener('error',e=>{try{parent.postMessage({type:'tkx-error',msg:String(e.message||'Error'),
+      stack:String((e.error&&e.error.stack)||e.filename+':'+e.lineno+':'+e.colno)},'*')}catch(_){}});
+      window.addEventListener('unhandledrejection',e=>{try{parent.postMessage({type:'tkx-error',
+      msg:String(e.reason&&(e.reason.message||e.reason)||'Promise rejection'),stack:String(e.reason&&e.reason.stack||'')},'*')}catch(_){}});
+    })();</`+'script'>`;
+    const liveHook = live ? `<script>(function(){
         document.body.setAttribute('contenteditable','true');
         Array.from(document.querySelectorAll('script,style')).forEach(n=>n.setAttribute('contenteditable','false'));
-        const app = document.getElementById('app'); if (app) app.setAttribute('contenteditable','true');
-        let timer=null;
-        document.addEventListener('input', ()=>{
-          clearTimeout(timer);
-          timer=setTimeout(()=>{
-            const root = document.getElementById('app')||document.body;
-            parent.postMessage({ type:'tkx-html-changed', html: root.innerHTML }, '*');
-          }, 250);
-        });
-      })();<\/script>` : '';
-
-    // Note: we append a //# sourceURL to help stack traces hint at "user.js".
+        const app=document.getElementById('app'); if(app) app.setAttribute('contenteditable','true');
+        let t=null; document.addEventListener('input',()=>{clearTimeout(t); t=setTimeout(()=>{
+          const root=document.getElementById('app')||document.body;
+          parent.postMessage({type:'tkx-html-changed',html:root.innerHTML},'*');
+        },250)});
+      })();</`+'script'>` : '';
     return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-${blockNetwork ? cspMeta : '' }
-<title>TikkoX Preview</title>
-<style id="user-style">${css}</style>
-<div id="app">
-${html}
-</div>
-${netBlocker}
-${errorHooks}
-<script>try{ ${js}\n//# sourceURL=user.js }catch(err){
-  try{ parent.postMessage({type:'tkx-error', msg:String(err.message||err), stack:String(err.stack||'') }, '*'); }catch(_){}
-  document.body.insertAdjacentHTML('beforeend','<pre style="color:#e74c3c;background:#111;padding:12px;border-radius:8px;overflow:auto">'+(err && (err.stack||err.message||err))+'</pre>');
-  console.error(err);
-}<\/script>
-${liveEditHook}`;
+${csp}<title>TikkoX Preview</title><style id="user-style">${css}</style><div id="app">${html}</div>
+${netBlocker}${errorHooks}<script>try{${js}\n//# sourceURL=user.js}catch(err){try{parent.postMessage({type:'tkx-error',msg:String(err.message||err),stack:String(err.stack||'')},'*')}catch(_){}}</`+'script'>${liveHook}`;
   }
 
-  // Render
   function clearError(){ errPanel.style.display='none'; errText.textContent=''; }
-  function showError(msg, stack){
+  function showErrorList(list){
+    if(!list.length){ clearError(); return; }
     errPanel.style.display='block';
-    errText.textContent = (msg||'Error') + (stack?('\n'+stack):'');
-    status.className='status err'; status.textContent='Error';
-    // Try to extract line number like : <anonymous>:123:45 or user.js:123:45
-    const m = /:(\d+):(\d+)/.exec(stack||'') || /user\.js:(\d+):(\d+)/.exec(stack||'');
-    if(m){
-      const line = parseInt(m[1],10);
-      // Try to focus near that line in JS textarea
-      const code = boxes.js.value.split('\n');
-      let pos = 0;
-      for(let i=0;i<Math.min(line-1, code.length);i++) pos += code[i].length + 1;
-      boxes.js.focus();
-      boxes.js.setSelectionRange(pos, pos);
-      // scroll into view
-      const lh = 18; // approx line height
-      boxes.js.scrollTop = Math.max(0, (line-3)*lh);
-    }
+    const lines = list.map((e,i)=>`${i+1}. ${e.msg}${e.line?` (line ${e.line})`:''}${e.suggest?` — suggestion: ${e.suggest}`:''}`);
+    errText.textContent = `${list.length} issue(s):\n` + lines.join('\n');
+    status.className='status err'; status.textContent=`${list.length} issue(s)`;
   }
+
+  function lint(){
+    const issues = [];
+    const js = getEditorText(eds.js);
+    try{ new Function(js); }catch(e){
+      const m = /:(\\d+):(\\d+)/.exec(String(e.stack||''));
+      issues.push({msg:String(e.message||'JS error'), line:m?Number(m[1]):undefined, suggest:'Check missing brackets or quotes'});
+    }
+    const html = getEditorText(eds.html);
+    if((html.match(/<html/gi)||[]).length>1) issues.push({msg:'Multiple <html> tags detected', suggest:'Use a single root html'});
+    (html.match(/<([a-zA-Z]+)(?![^>]*\\/>)[^>]*>/g)||[]).forEach(t=>{
+      const name = t.replace(/<|>|\\/.*/g,'').toLowerCase();
+      if(!/^(br|hr|img|meta|link|input)$/.test(name)){
+        if(!new RegExp(`</${name}>`,`i`).test(html)) issues.push({msg:`Unclosed <${name}> tag`, suggest:`Add </${name}>`});
+      }
+    });
+    return issues;
+  }
+
   function render(){
     try{
-      clearError();
-      const doc = makeDoc(boxes.html.value, boxes.css.value, boxes.js.value, blockNet.checked, liveEdit.checked);
+      const doc = makeDoc(getEditorText(eds.html), getEditorText(eds.css), getEditorText(eds.js), blockNet.checked, liveEdit.checked);
       iframe.srcdoc = doc;
-      status.className = 'status ok';
-      status.textContent = 'Ran successfully';
+      const issues = lint(); showErrorList(issues);
+      if(!issues.length){ status.className='status ok'; status.textContent='Ran successfully'; }
     }catch(e){
-      showError('Build error', (e && (e.stack||e.message))||'');
+      showErrorList([{msg:'Build error: '+(e.message||e)}]);
       console.error(e);
     }
   }
 
-  // Buttons
   runBtn.addEventListener('click', render);
-  refreshBtn.addEventListener('click', ()=>{ // force a hard refresh of iframe
-    const old = iframe.srcdoc; iframe.srcdoc = ' '; setTimeout(()=>{ iframe.srcdoc = old; }, 0);
-    status.className='status'; status.textContent='Refreshed';
-    clearError();
-  });
-  [boxes.html, boxes.css, boxes.js].forEach(el=>{
-    el.addEventListener('input', ()=>{ if(autoRun.checked) render(); });
-  });
+  [eds.html, eds.css, eds.js].forEach(el=> el.addEventListener('input', ()=>{ if(autoRun.checked) render(); }));
   [blockNet, liveEdit].forEach(el=> el.addEventListener('change', render));
+  refreshBtn.addEventListener('click', ()=>{ const old=iframe.srcdoc; iframe.srcdoc=' '; setTimeout(()=>iframe.srcdoc=old,0); status.textContent='Refreshed'; });
+  resetBtn.addEventListener('click', ()=>{ setEditorText(eds.html, starter.html,'html'); setEditorText(eds.css, starter.css,'css'); setEditorText(eds.js, starter.js,'js'); persist(); render(); });
+  clearBtn.addEventListener('click', ()=>{ setEditorText(eds.html,'','html'); setEditorText(eds.css,'','css'); setEditorText(eds.js,'','js'); persist(); render(); });
 
-  // Reset / Clear
-  resetBtn.addEventListener('click', ()=>{
-    boxes.html.value = starter.html;
-    boxes.css.value  = starter.css;
-    boxes.js.value   = starter.js;
-    clearError(); render();
-  });
-  clearBtn.addEventListener('click', ()=>{
-    boxes.html.value = '';
-    boxes.css.value  = '';
-    boxes.js.value   = '';
-    clearError(); render();
-  });
+  document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click', async ()=>{
+    const id = btn.getAttribute('data-copy'); const el = document.getElementById(id);
+    await navigator.clipboard.writeText(getEditorText(el)); status.className='status ok'; status.textContent='Copied';
+  }));
+  function buildFull(){ return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My TikkoX Build</title><style>${getEditorText(eds.css)}</style>${getEditorText(eds.html)}<script>${getEditorText(eds.js)}</`+'script>'; }
+  copyFull.addEventListener('click', async ()=>{ await navigator.clipboard.writeText(buildFull()); status.className='status ok'; status.textContent='Full page copied'; });
+  downloadBtn.addEventListener('click', ()=>{ const blob = new Blob([buildFull()],{type:'text/html'}); const url=URL.createObjectURL(blob); const a=Object.assign(document.createElement('a'),{href:url,download:'tikkox-build.html'}); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); });
 
-  // Copy (sections) + Copy Full + Download
-  document.querySelectorAll('[data-copy]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      const id = btn.getAttribute('data-copy');
-      const ta = document.getElementById(id);
-      await navigator.clipboard.writeText(ta.value);
-      status.className='status ok'; status.textContent='Copied '+id.replace('Box','').toUpperCase();
-      setTimeout(()=>{status.className='status'; status.textContent='Ready';},1500);
+  function encodeState(){ try{ const obj={h:getEditorText(eds.html),c:getEditorText(eds.css),j:getEditorText(eds.js)}; const str=encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(obj))))); return '#tkx='+str }catch(e){return ''} }
+  function decodeState(hash){ try{ if(!hash.startsWith('#tkx=')) return null; const b64=decodeURIComponent(hash.slice(5)); const json=decodeURIComponent(escape(atob(b64))); return JSON.parse(json); }catch(e){ return null } }
+  (function loadFromHash(){ const st=decodeState(location.hash); if(!st) return; setEditorText(eds.html, st.h||starter.html,'html'); setEditorText(eds.css, st.c||starter.css,'css'); setEditorText(eds.js, st.j||starter.js,'js'); persist(); })();
+  shareBtn.addEventListener('click', async ()=>{ const link = location.origin + location.pathname + encodeState(); try{ if(navigator.share){ await navigator.share({title:'TikkoX Playground',text:'Check this code',url:link}); } else { await navigator.clipboard.writeText(link); alert('Share link copied!'); } }catch(e){ await navigator.clipboard.writeText(link); alert('Share link copied!'); } });
+
+  uploadBtn.addEventListener('click', ()=>uploader.click());
+  uploader.addEventListener('change', ()=>{
+    filesWrap.innerHTML = '';
+    Array.from(uploader.files).forEach(file=>{
+      const reader = new FileReader();
+      reader.onload = () => {
+        const url = reader.result;
+        const pill = document.createElement('button');
+        pill.className='file-pill'; pill.title='Click to copy Data-URL'; pill.textContent = file.name;
+        pill.addEventListener('click', async ()=>{ await navigator.clipboard.writeText(url); alert('Copied Data-URL for '+file.name); });
+        filesWrap.appendChild(pill);
+      };
+      reader.readAsDataURL(file);
     });
   });
-  function buildFullFile(){
-    return `<!doctype html>
-<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>My TikkoX Build</title>
-<style>${boxes.css.value}</style>
-${boxes.html.value}
-<script>
-${boxes.js.value}
-<\/script>`;
-  }
-  copyFull.addEventListener('click', async ()=>{
-    await navigator.clipboard.writeText(buildFullFile());
-    status.className='status ok'; status.textContent='Full page copied';
-    setTimeout(()=>{status.className='status'; status.textContent='Ready';},1500);
-  });
-  downloadBtn.addEventListener('click', ()=>{
-    const blob = new Blob([buildFullFile()], {type:'text/html'});
-    const url  = URL.createObjectURL(blob);
-    const a = Object.assign(document.createElement('a'), {href:url, download:'tikkox-build.html'});
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+
+  micBtn.addEventListener('click',()=>{
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR){ alert('Speech recognition not supported'); return; }
+    const recog = new SR(); recog.lang='en-US'; recog.interimResults=false; recog.maxAlternatives=1;
+    recog.onresult = (e)=>{
+      const txt = e.results[0][0].transcript;
+      const active = !eds.html.hidden ? eds.html : (!eds.css.hidden ? eds.css : eds.js);
+      setEditorText(active, (getEditorText(active) + '\\n' + txt), active===eds.html?'html':active===eds.css?'css':'js');
+      persist(); if(autoRun.checked) render();
+    };
+    recog.start();
   });
 
-  // Share link (URL encodes your code)
-  shareBtn.addEventListener('click', async ()=>{
-    const hash = encodeState();
-    const link = location.origin + location.pathname + hash;
-    try{
-      if(navigator.share){
-        await navigator.share({ title:'TikkoX Playground', text:'Check this code', url: link });
-      }else{
-        await navigator.clipboard.writeText(link);
-        alert('Share link copied to clipboard!');
-      }
-    }catch(e){
-      await navigator.clipboard.writeText(link);
-      alert('Share link copied to clipboard!');
-    }
+  function beautify(txt){ try{ return txt.replace(/></g, '>\\n<'); }catch(_){ return txt } }
+  beautifyBtn.addEventListener('click',()=>{
+    setEditorText(eds.html, beautify(getEditorText(eds.html)), 'html');
+    setEditorText(eds.css,  getEditorText(eds.css).replace(/;\\s*/g,';\\n').replace(/\\{\\s*/g,'{\\n').replace(/\\}\\s*/g,'}\\n'), 'css');
+    setEditorText(eds.js,   getEditorText(eds.js).replace(/;\\s*/g,';\\n'), 'js');
+    persist();
   });
 
-  // Two-way sync (Preview -> HTML editor) via postMessage
-  window.addEventListener('message', (ev)=>{
+  window.addEventListener('message', ev=>{
     if(!ev.data) return;
-    if(ev.data.type === 'tkx-html-changed'){
-      boxes.html.value = ev.data.html;
-      status.className='status ok'; status.textContent='Synced from Live Edit';
-      if (autoRun.checked) render();
-      setTimeout(()=>{status.className='status'; status.textContent='Ready';},1200);
-    }
-    if(ev.data.type === 'tkx-error'){
-      showError(ev.data.msg, ev.data.stack);
-    }
+    if(ev.data.type==='tkx-html-changed'){ setEditorText(eds.html, ev.data.html, 'html'); persist(); if(autoRun.checked) render(); }
+    if(ev.data.type==='tkx-error'){ showErrorList([{msg:ev.data.msg, line: (/:([0-9]+):/).test(ev.data.stack)?Number(RegExp.$1):undefined}]); }
   });
 
-  // First render
+  function showErrorList(list){
+    if(!list.length){ errPanel.style.display='none'; errText.textContent=''; return; }
+    errPanel.style.display='block';
+    const lines = list.map((e,i)=>`${i+1}. ${e.msg}${e.line?` (line ${e.line})`:''}${e.suggest?` — suggestion: ${e.suggest}`:''}`);
+    errText.textContent = `${list.length} issue(s):\\n` + lines.join('\\n');
+    status.className='status err'; status.textContent=`${list.length} issue(s)`;
+  }
+
+  function render(){
+    try{
+      const doc = makeDoc(getEditorText(eds.html), getEditorText(eds.css), getEditorText(eds.js), blockNet.checked, liveEdit.checked);
+      iframe.srcdoc = doc;
+      const issues = (function(){
+        const arr=[]; const js=getEditorText(eds.js);
+        try{ new Function(js); }catch(e){ const m=/:([0-9]+):([0-9]+)/.exec(String(e.stack||'')); arr.push({msg:String(e.message||'JS error'), line:m?Number(m[1]):undefined, suggest:'Check missing brackets or quotes'}); }
+        const html=getEditorText(eds.html);
+        if((html.match(/<html/gi)||[]).length>1) arr.push({msg:'Multiple <html> tags detected', suggest:'Use a single root html'});
+        (html.match(/<([a-zA-Z]+)(?![^>]*\\/>)[^>]*>/g)||[]).forEach(t=>{
+          const name = t.replace(/<|>|\\/.*/g,'').toLowerCase();
+          if(!/^(br|hr|img|meta|link|input)$/.test(name)){
+            if(!new RegExp(`</${name}>`,`i`).test(html)) arr.push({msg:`Unclosed <${name}> tag`, suggest:`Add </${name}>`});
+          }
+        });
+        return arr;
+      })();
+      showErrorList(issues);
+      if(!issues.length){ status.className='status ok'; status.textContent='Ran successfully'; }
+    }catch(e){
+      showErrorList([{msg:'Build error: '+(e.message||e)}]);
+      console.error(e);
+    }
+  }
+
   render();
-})();
-</script>
+})();</script>
 </body>
 </html>
