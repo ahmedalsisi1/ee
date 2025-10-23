@@ -1,0 +1,56 @@
+:root{
+  --bg:#000; --fg:#d4af37; --fg2:#b9992a; --card:#0b0b0b; --line:#151515;
+  --good:#27ae60; --bad:#e74c3c; --muted:#a6a6a6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:var(--fg);text-decoration:none}
+.wrap{max-width:1220px;margin:auto;padding:14px 20px}
+header{position:sticky;top:0;z-index:20;background:#050505cc;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.top{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+.brand img{width:36px;height:36px;border-radius:8px;object-fit:cover}
+.brand .fallback{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#d4af37,#8c6f1d);color:#000;font-weight:900}
+.spacer{flex:1}
+.btn{border:1px solid var(--fg);color:var(--fg);background:transparent;padding:10px 14px;border-radius:10px;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,#d4af37,#b28a29);color:#000;border-color:#b28a29}
+.btn.ghost{border-color:var(--fg2)}
+.btn.danger{border-color:var(--bad);color:var(--bad)}
+.badge{border:1px solid var(--line);color:var(--fg2);border-radius:999px;padding:6px 10px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+label.switch{display:flex;gap:8px;align-items:center;color:var(--fg2);font-size:14px}
+input[type="checkbox"]{accent-color:var(--fg)}
+main .grid{display:grid;gap:16px}
+@media(min-width:1024px){ main .grid{grid-template-columns:1.05fr .95fr} }
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tab{border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--fg2)}
+.tab.active{border-color:var(--fg);color:var(--fg);box-shadow:0 0 0 1px var(--fg) inset}
+.editor{min-height:260px;outline:none;white-space:pre;overflow:auto;padding:10px;border:1px solid var(--line);border-radius:10px;background:#0b0b0b;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.token.tag{color:#7aa2f7}
+.token.attr{color:#e0af68}
+.token.string{color:#9ece6a}
+.token.comment{color:#565f89}
+.token.keyword{color:#bb9af7}
+.token.number{color:#ff9e64}
+.editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.preview{background:#0b0b0b;border:1px solid var(--line);border-radius:14px;height:600px;overflow:hidden;position:relative}
+iframe{width:100%;height:100%;border:0;background:#fff}
+.status{font-size:12px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg2)}
+.status.ok{border-color:var(--good);color:var(--good)}
+.status.err{border-color:var(--bad);color:var(--bad)}
+.error-panel{margin-top:8px;background:#1a0f10;border:1px solid #361b1d;border-radius:10px;padding:10px;display:none}
+.error-panel pre{margin:0;color:#ffb3b3;white-space:pre-wrap;word-wrap:break-word}
+.error-panel .title{color:#ff8a8a;font-weight:700;margin-bottom:6px}
+.hero{padding:24px 0 0;position:relative;overflow:hidden}
+.hero h1{color:var(--fg);font-size:clamp(24px,4vmax,44px);margin:10px 0 6px}
+.hero p{color:var(--fg2);margin:0}
+.bg-logo{position:absolute;left:50%;top:44%;width:min(460px,75vw);opacity:.06;transform:translate(-50%,-50%);animation:float 6s ease-in-out infinite}
+@keyframes float{50%{transform:translate(-50%,-56%)}}
+footer{border-top:1px solid var(--line);padding:24px;text-align:center;color:var(--fg2)}
+.footer-logo{margin-top:10px;display:inline-grid;place-items:center}
+.footer-logo .mark{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,#d4af37,#8c6f1d);color:#000;font-weight:900;display:grid;place-items:center;animation:float 3s ease-in-out infinite}
+.files{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.file-pill{border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:#0e0e0e;color:#ddd;font-size:12px}
