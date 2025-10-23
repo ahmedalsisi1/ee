@@ -1,113 +1,452 @@
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TikkoX Code Arena — Black & Gold</title>
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#000000">
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'self' data: blob:; img-src 'self' data: blob:; media-src 'self' data: blob:; style-src 'unsafe-inline' 'self'; script-src 'unsafe-inline' 'self'; frame-src 'self' data: blob:; connect-src 'self'">
-<link rel="stylesheet" href="assets/styles.css">
+<style>
+:root{ --bg:#000; --fg:#d4af37; --fg2:#b9992a; --card:#0b0b0b; --line:#151515; --good:#27ae60; --bad:#e74c3c; --muted:#a6a6a6 }
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:#eaeaea;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:var(--fg);text-decoration:none}
+.wrap{max-width:1240px;margin:auto;padding:16px 20px}
+
+/* Header */
+header{position:sticky;top:0;z-index:30;background:#040404cc;backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.top{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.3px}
+.brand img{width:44px;height:44px;border-radius:10px;object-fit:cover}
+.spacer{flex:1}
+
+.btn{border:1px solid var(--fg);color:var(--fg);background:transparent;padding:10px 14px;border-radius:10px;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,#d4af37,#b28a29);color:#000;border-color:#b28a29}
+.btn.ghost{border-color:var(--fg2)}
+.btn.danger{border-color:var(--bad);color:var(--bad)}
+.badge{border:1px solid var(--line);color:var(--fg2);border-radius:999px;padding:6px 10px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+label.switch{display:flex;gap:8px;align-items:center;color:var(--fg2);font-size:14px}
+input[type="checkbox"]{accent-color:var(--fg)}
+
+/* Layout */
+main .grid{display:grid;gap:16px}
+@media(min-width:1024px){ main .grid{grid-template-columns:1.05fr .95fr} }
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tab{border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--fg2)}
+.tab.active{border-color:var(--fg);color:var(--fg);box-shadow:0 0 0 1px var(--fg) inset}
+textarea{width:100%;min-height:280px;background:#0b0b0b;border:1px solid var(--line);border-radius:10px;color:#eee;padding:10px;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace; resize:vertical}
+.editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.small{font-size:12px;color:var(--fg2)}
+
+/* Preview */
+.preview{background:#0b0b0b;border:1px solid var(--line);border-radius:14px;height:620px;overflow:hidden;position:relative}
+iframe{width:100%;height:100%;border:0;background:#fff}
+.status{font-size:12px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg2)}
+.status.ok{border-color:var(--good);color:var(--good)}
+.status.err{border-color:var(--bad);color:var(--bad)}
+
+/* Error panel */
+.error-panel{margin-top:8px;background:#1a0f10;border:1px solid #361b1d;border-radius:10px;padding:10px;display:none}
+.error-panel pre{margin:0;color:#ffb3b3;white-space:pre-wrap;word-wrap:break-word}
+.error-panel .title{color:#ff8a8a;font-weight:700;margin-bottom:6px}
+.error-count{margin-left:8px;color:#ffb3b3}
+
+/* Hero */
+.hero{padding:22px 0 10px}
+.hero h1{color:var(--fg);font-size:clamp(26px,4.2vmax,44px);margin:8px 0 6px}
+.hero p{color:var(--fg2);margin:0}
+
+/* Footer + animated logo */
+footer{border-top:1px solid var(--line);padding:26px;text-align:center;color:var(--fg2)}
+.footer-logo{margin-top:12px;display:inline-grid;place-items:center}
+.footer-logo .mark{width:62px;height:62px;border-radius:14px;background:linear-gradient(135deg,#d4af37,#8c6f1d);
+  color:#000;font-weight:900;display:grid;place-items:center;animation:float 3s ease-in-out infinite, shine 4s linear infinite}
+@keyframes float{50%{transform:translateY(-6px)}}
+@keyframes shine{0%{box-shadow:0 0 0 rgba(212,175,55,0)}50%{box-shadow:0 0 18px rgba(212,175,55,.45)}100%{box-shadow:0 0 0 rgba(212,175,55,0)}}
+
+/* Upload chips */
+.uploads{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.uploads .chip{border:1px dashed var(--fg2);padding:6px 10px;border-radius:999px;font-size:12px;color:#ddd;cursor:pointer}
+
+/* Tips */
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px}
+.tip{background:#0c0c0c;border:1px solid #191919;border-radius:12px;padding:12px}
+.tip b{color:var(--fg)}
+</style>
 </head>
 <body>
 
 <header>
   <div class="wrap">
-    <nav class="top">
+    <nav class="top" aria-label="Top navigation">
       <div class="brand">
-        <img src="assets/logo.svg" alt="TikkoX Logo" onerror="this.style.display='none'">
-        <div class="fallback" style="display:none">TX</div>
-        <span>TikkoX Code Arena</span>
+        <img src="assets/logo.png" alt="TikkoX Logo">
+        <span>TikkoX • Code Arena</span>
       </div>
       <span class="badge">Free • Private • Sandboxed</span>
       <div class="spacer"></div>
+
       <div class="controls">
-        <label class="switch"><input id="autoRun" type="checkbox" checked> Auto-Run</label>
-        <label class="switch"><input id="blockNet" type="checkbox" checked> Block Network</label>
-        <label class="switch"><input id="liveEdit" type="checkbox"> Live Edit (HTML)</label>
-        <input id="uploader" type="file" multiple hidden accept=".png,.jpg,.jpeg,.gif,.webp,.svg,.css,.js,.html,.txt"/>
-        <button id="uploadBtn" class="btn" title="Upload images/files to use as Data-URL">Add Files</button>
-        <button id="micBtn" class="btn" title="Dictate code with your voice">🎤 Speak</button>
+        <input id="filePicker" type="file" hidden multiple>
+        <button id="uploadBtn" class="btn" title="Upload files/images">Upload</button>
+        <button id="micBtn" class="btn" title="Dictate with your voice">🎤 Mic</button>
+
+        <label class="switch" title="Auto preview on typing"><input id="autoRun" type="checkbox" checked> Auto</label>
+        <label class="switch" title="Block fetch/XHR/open in preview"><input id="blockNet" type="checkbox" checked> Block Net</label>
+        <label class="switch" title="Edit text directly inside preview"><input id="liveEdit" type="checkbox"> Live Edit</label>
+
         <button id="runBtn" class="btn primary">Run ▶</button>
-        <button id="refreshBtn" class="btn">Refresh ⟳</button>
-        <button id="shareBtn" class="btn">Share Link</button>
-        <button id="downloadBtn" class="btn">Download .html</button>
-        <button id="resetBtn" class="btn ghost">Reset Example</button>
-        <button id="beautifyBtn" class="btn ghost">Beautify Code</button>
-        <button id="clearBtn" class="btn danger">Clear All</button>
+        <button id="beautifyBtn" class="btn" title="Format HTML/CSS/JS">Beautify</button>
+        <button id="shareBtn" class="btn" title="Share state as URL">Share</button>
+        <button id="downloadBtn" class="btn" title="Download single HTML">Download</button>
+        <button id="resetBtn" class="btn ghost" title="Reset to example">Reset</button>
+        <button id="clearBtn" class="btn danger" title="Clear all editors">Clear</button>
       </div>
     </nav>
   </div>
 </header>
 
 <section class="hero">
-  <img class="bg-logo" aria-hidden="true" src="assets/logo.svg"/>
   <div class="wrap">
-    <h1>Welcome — مرحبًا بكم في <b>TikkoX Code Arena</b> 👋</h1>
-    <p>Write, run, and share. No sign-up. No storage on our servers. We keep your code locally for <b>24h</b> so you don’t lose it.</p>
+    <h1>Welcome to <b>TikkoX Code Arena</b> 👋</h1>
+    <p>Write or paste HTML/CSS/JS. Live preview updates instantly. Your code stays locally for 24h — we never store it.</p>
   </div>
 </section>
 
 <main class="wrap">
   <div class="grid">
-    <div class="panel">
+    <!-- Editors -->
+    <div class="panel" aria-label="Editors">
       <div class="tabs" role="tablist">
-        <div class="tab active" data-target="htmlEd">HTML</div>
-        <div class="tab" data-target="cssEd">CSS</div>
-        <div class="tab" data-target="jsEd">JavaScript</div>
+        <div class="tab active" data-target="htmlBox" role="tab" aria-selected="true">HTML</div>
+        <div class="tab" data-target="cssBox" role="tab" aria-selected="false">CSS</div>
+        <div class="tab" data-target="jsBox" role="tab" aria-selected="false">JavaScript</div>
       </div>
 
-      <pre id="htmlEd" class="editor" contenteditable="true" spellcheck="false" aria-label="HTML"></pre>
-      <pre id="cssEd"  class="editor" contenteditable="true" spellcheck="false" aria-label="CSS" hidden></pre>
-      <pre id="jsEd"   class="editor" contenteditable="true" spellcheck="false" aria-label="JavaScript" hidden></pre>
+      <textarea id="htmlBox" aria-label="HTML editor"></textarea>
+      <textarea id="cssBox" aria-label="CSS editor" hidden></textarea>
+      <textarea id="jsBox" aria-label="JavaScript editor" hidden></textarea>
 
       <div class="editor-actions">
-        <button class="btn" data-copy="htmlEd">Copy HTML</button>
-        <button class="btn" data-copy="cssEd">Copy CSS</button>
-        <button class="btn" data-copy="jsEd">Copy JS</button>
+        <button class="btn" data-copy="htmlBox">Copy HTML</button>
+        <button class="btn" data-copy="cssBox">Copy CSS</button>
+        <button class="btn" data-copy="jsBox">Copy JS</button>
         <button class="btn ghost" id="copyFull">Copy Full Page</button>
-        <span id="status" class="status">Live</span>
+        <span id="status" class="status">Ready</span>
       </div>
 
+      <!-- أخطاء -->
       <div id="errorPanel" class="error-panel">
-        <div class="title">Errors & Warnings</div>
+        <div class="title">Errors <span id="errCount" class="error-count"></span></div>
         <pre id="errorText"></pre>
       </div>
 
-      <div class="files" id="files"></div>
+      <!-- الملفات المرفوعة -->
+      <div id="uploadList" class="uploads" aria-label="Uploaded files"></div>
+
+      <!-- تعليمات -->
+      <div class="tips" aria-label="Notes">
+        <div class="tip"><b>Privacy:</b> We do NOT store your code; everything runs in your browser only.</div>
+        <div class="tip"><b>Live Edit:</b> Enable it, then click text in preview to edit and sync back to HTML.</div>
+        <div class="tip"><b>Safety:</b> Block Network stops requests (fetch, XHR, window.open) inside the preview.</div>
+        <div class="tip"><b>Export:</b> Use “Copy Full Page” or “Download” to get a deploy-ready single file.</div>
+      </div>
     </div>
 
-    <div class="panel">
+    <!-- Preview -->
+    <div class="panel" aria-label="Preview">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <div style="display:flex;gap:8px;align-items:center">
           <b>Preview</b><span class="badge">Sandboxed</span>
         </div>
-        <small class="notice">Tip: enable <b>Live Edit</b>, then click text and type to sync back ↑</small>
+        <small class="small">Tip: enable <b>Live Edit</b>, then edit text in the preview to sync back ↑</small>
       </div>
       <div class="preview">
         <iframe id="preview" sandbox="allow-scripts allow-forms" referrerpolicy="no-referrer"></iframe>
       </div>
     </div>
   </div>
-
-  <div class="panel" style="margin-top:16px">
-    <h3 style="margin:6px 0;color:var(--fg)">About this tool</h3>
-    <ul class="notice">
-      <li><b>We don’t store your code</b> — everything runs in your browser. Avoid pasting secrets.</li>
-      <li><b>Persistence</b>: your code is saved locally for 24 hours (resets automatically).</li>
-      <li><b>Share</b>: “Share Link” encodes your code in the URL (works on any device).</li>
-      <li><b>Safety</b>: preview is sandboxed. Toggle <b>Block Network</b> to prevent <code>fetch</code>/<code>XHR</code>/<code>window.open</code>.</li>
-      <li><b>Uploads</b>: add images/files; click a file pill to copy its Data‑URL and use it in your HTML.</li>
-    </ul>
-    <p class="notice">Enjoy building with <b>TikkoX</b> — The black & gold arena for experimenting with code.</p>
-    <div class="footer-logo"><div class="mark">TX</div></div>
-  </div>
 </main>
 
-<footer>© 2025 TikkoX — Code Arena. Black & Gold, beyond ordinary ✨</footer>
+<footer class="wrap">
+  <div class="footer-logo"><div class="mark">TX</div></div>
+  <p>© 2025 TikkoX — Code Arena. Black & Gold theme. Build safely. 🚀</p>
+</footer>
 
-<script src="assets/app.js"></script>
+<script>
+(function(){
+  const tabs=[...document.querySelectorAll('.tab')];
+  const boxes={ html:htmlBox, css:cssBox, js:jsBox };
+  const iframe=preview;
+  const runBtn=document.getElementById('runBtn');
+  const beautifyBtn=document.getElementById('beautifyBtn');
+  const resetBtn=document.getElementById('resetBtn');
+  const clearBtn=document.getElementById('clearBtn');
+  const downloadBtn=document.getElementById('downloadBtn');
+  const shareBtn=document.getElementById('shareBtn');
+  const status=document.getElementById('status');
+  const autoRun=document.getElementById('autoRun');
+  const blockNet=document.getElementById('blockNet');
+  const liveEdit=document.getElementById('liveEdit');
+  const errPanel=document.getElementById('errorPanel');
+  const errText=document.getElementById('errorText');
+  const errCount=document.getElementById('errCount');
+  const filePicker=document.getElementById('filePicker');
+  const uploadBtn=document.getElementById('uploadBtn');
+  const uploadList=document.getElementById('uploadList');
+  const micBtn=document.getElementById('micBtn');
+
+  // 24h local save
+  const KEY='tkx-arena-v2', TTL=24*60*60*1000;
+
+  const starter={
+    html:`<section class="hero"><h2 style="color:#d4af37">Hello from TikkoX ✨</h2><p>Edit and see magic instantly.</p></section>`,
+    css:`body{background:#000;color:#eee} a{color:#d4af37}`,
+    js:`console.log('TikkoX ready');`
+  };
+
+  function save(){
+    try{ localStorage.setItem(KEY, JSON.stringify({ts:Date.now(),h:boxes.html.value,c:boxes.css.value,j:boxes.js.value})); }catch(e){}
+  }
+  function load(){
+    try{
+      const raw=localStorage.getItem(KEY);
+      if(!raw) return false;
+      const o=JSON.parse(raw);
+      if(!o.ts || Date.now()-o.ts>TTL){ localStorage.removeItem(KEY); return false; }
+      boxes.html.value=o.h??starter.html; boxes.css.value=o.c??starter.css; boxes.js.value=o.j??starter.js; return true;
+    }catch(e){ return false; }
+  }
+
+  // Share encode/decode
+  function enc(){
+    try{
+      return '#tkx='+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({h:boxes.html.value,c:boxes.css.value,j:boxes.js.value})))));
+    }catch(e){return ''}
+  }
+  function dec(hash){
+    try{
+      if(!hash.startsWith('#tkx=')) return null;
+      const b64 = decodeURIComponent(hash.slice(5));
+      const json=decodeURIComponent(escape(atob(b64)));
+      return JSON.parse(json);
+    }catch(e){ return null; }
+  }
+
+  // Init: load from URL or storage or starter
+  (function init(){
+    const st = dec(location.hash);
+    if(st){ boxes.html.value=st.h??starter.html; boxes.css.value=st.c??starter.css; boxes.js.value=st.j??starter.js; }
+    else if(!load()){ boxes.html.value=starter.html; boxes.css.value=starter.css; boxes.js.value=starter.js; }
+  })();
+
+  // Tabs
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    [htmlBox,cssBox,jsBox].forEach(el=>el.hidden=true);
+    document.getElementById(t.dataset.target).hidden=false;
+  }));
+
+  // Build preview document
+  function makeDoc(html, css, js, blockNetwork, live) {
+    const cspMeta = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; media-src data: blob:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'">`;
+    const netBlocker = blockNetwork ? `
+      <script>(function(){
+        const deny=()=>{throw new Error('Network blocked in preview')};
+        const nop=()=>{};
+        window.fetch=deny; window.XMLHttpRequest=function(){deny()}; window.open=nop;
+        try{navigator.sendBeacon=nop}catch(_){}
+      })();<\/script>` : '';
+
+    const errorHooks = `
+      <script>(function(){
+        addEventListener('error', function(e){
+          parent.postMessage({type:'tkx-error', msg:String(e.message), stack:String((e.error&&e.error.stack)||e.filename+':'+e.lineno+':'+e.colno)}, '*');
+        });
+        addEventListener('unhandledrejection', function(e){
+          parent.postMessage({type:'tkx-error', msg:String(e.reason && (e.reason.message||e.reason)), stack:String(e.reason && e.reason.stack || '')}, '*');
+        });
+      })();<\/script>`;
+
+    const liveEditHook = live ? `
+      <script>(function(){
+        document.body.contentEditable='true';
+        Array.from(document.querySelectorAll('script,style')).forEach(n=>n.contentEditable='false');
+        let t=null;
+        document.addEventListener('input', ()=>{
+          clearTimeout(t);
+          t=setTimeout(()=>{
+            parent.postMessage({ type:'tkx-html-changed', html:(document.getElementById('app')||document.body).innerHTML }, '*');
+          }, 250);
+        });
+      })();<\/script>` : '';
+
+    return `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+${blockNetwork ? cspMeta : '' }
+<style id="user-style">${css}</style>
+<div id="app">${html}</div>
+${netBlocker}
+${errorHooks}
+<script>try{ ${js}\n//# sourceURL=user.js }catch(err){
+  parent.postMessage({type:'tkx-error', msg:String(err.message||err), stack:String(err.stack||'') }, '*');
+}<\/script>
+${liveEditHook}`;
+  }
+
+  // Errors UI
+  function clearError(){ errPanel.style.display='none'; errText.textContent=''; errCount.textContent=''; status.className='status'; status.textContent='Ready'; }
+  function showErrorList(list){
+    if(!list || !list.length){ clearError(); return; }
+    errPanel.style.display='block';
+    errCount.textContent = '('+list.length+')';
+    errText.textContent  = list.map(e=>'- '+e.msg+(e.stack?('\\n  '+e.stack):'')).join('\\n');
+    status.className='status err'; status.textContent='Errors';
+  }
+
+  // Render
+  function render(){
+    try{
+      clearError();
+      iframe.srcdoc = makeDoc(boxes.html.value, boxes.css.value, boxes.js.value, blockNet.checked, liveEdit.checked);
+      status.className = 'status ok';
+      status.textContent = 'Ran successfully';
+      save();
+    }catch(e){
+      showErrorList([{msg:'Build error', stack:String(e)}]);
+    }
+  }
+
+  // Buttons & events
+  runBtn.addEventListener('click', render);
+  [htmlBox, cssBox, jsBox].forEach(el=>{
+    el.addEventListener('input', ()=>{ if(autoRun.checked) render(); save(); });
+  });
+  [blockNet, liveEdit].forEach(el=> el.addEventListener('change', render));
+
+  resetBtn.addEventListener('click', ()=>{
+    htmlBox.value=starter.html; cssBox.value=starter.css; jsBox.value=starter.js; render();
+  });
+  clearBtn.addEventListener('click', ()=>{
+    htmlBox.value=''; cssBox.value=''; jsBox.value=''; render();
+  });
+
+  // Copy & Download
+  document.querySelectorAll('[data-copy]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.getAttribute('data-copy');
+      await navigator.clipboard.writeText(document.getElementById(id).value);
+      status.className='status ok'; status.textContent='Copied '+id.replace('Box','').toUpperCase();
+    });
+  });
+  copyFull.addEventListener('click', async ()=>{
+    await navigator.clipboard.writeText(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${cssBox.value}</style>${htmlBox.value}<script>${jsBox.value}<\\/script>`);
+    status.className='status ok'; status.textContent='Full page copied';
+  });
+  downloadBtn.addEventListener('click', ()=>{
+    const blob = new Blob([`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${cssBox.value}</style>${htmlBox.value}<script>${jsBox.value}<\\/script>`], {type:'text/html'});
+    const url  = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement('a'), {href:url, download:'tikkox-build.html'});
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  // Share link (state in URL hash)
+  shareBtn.addEventListener('click', async ()=>{
+    const link = location.origin + location.pathname + enc();
+    try{
+      if(navigator.share){ await navigator.share({ title:'TikkoX Code Arena', text:'Check this code', url: link }); }
+      else{ await navigator.clipboard.writeText(link); alert('Share link copied to clipboard!'); }
+    }catch(e){
+      await navigator.clipboard.writeText(link);
+      alert('Share link copied to clipboard!');
+    }
+  });
+
+  // Uploads (Data URLs + auto-insert <img>)
+  uploadBtn.addEventListener('click', ()=> filePicker.click());
+  filePicker.addEventListener('change', e=>{
+    uploadList.innerHTML='';
+    [...(e.target.files||[])].forEach(f=>{
+      const r=new FileReader();
+      r.onload=()=>{
+        const url=r.result;
+        const chip=document.createElement('div');
+        chip.className='chip';
+        chip.textContent=f.name+' • '+Math.round(f.size/1024)+'KB';
+        chip.title='Click to copy Data-URL';
+        chip.onclick=async()=>{ await navigator.clipboard.writeText(url); alert('Copied Data-URL'); };
+        uploadList.appendChild(chip);
+
+        if(/^data:image\//.test(url)){ // صورة -> أضف تلقائياً
+          htmlBox.value += `\n<img src="${url}" alt="${f.name}" style="max-width:100%">`;
+          if (autoRun.checked) render();
+        }
+      };
+      r.readAsDataURL(f);
+    });
+    e.target.value='';
+  });
+
+  // Mic dictation
+  micBtn.addEventListener('click',()=>{
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){ alert('Speech recognition not supported on this browser.'); return; }
+    const rec=new SR(); rec.lang='en-US'; rec.interimResults=true;
+    rec.onresult=e=>{
+      let t=''; for(const r of e.results){ t+=r[0].transcript; }
+      const active = !htmlBox.hidden?htmlBox:(!cssBox.hidden?cssBox:jsBox);
+      active.value += (active.value && !active.value.endsWith('\n')?'\n':'') + t;
+      if (autoRun.checked) render();
+    };
+    rec.start();
+  });
+
+  // Live Edit sync back
+  window.addEventListener('message', (ev)=>{
+    if(!ev.data) return;
+    if(ev.data.type === 'tkx-html-changed'){
+      boxes.html.value = ev.data.html;
+      if (autoRun.checked) render();
+    }
+    if(ev.data.type === 'tkx-error'){
+      showErrorList([{msg:ev.data.msg, stack:ev.data.stack}]);
+    }
+  });
+
+  // Beautify 
+  function tidy(type,src){
+    try{
+      if(type==='css'){ return src.replace(/\{/g,'{\\n').replace(/\}/g,'\\n}\\n').replace(/;\\s*/g,';\\n').replace(/\\n+/g,'\\n').trim(); }
+      if(type==='js'){ return src.replace(/;\\s*/g,';\\n').replace(/\{\\s*/g,'{\\n').replace(/\}\\s*/g,'\\n}\\n').replace(/\\n+/g,'\\n').trim(); }
+      // HTML
+      let i=0,out=''; const parts=src.split(/(<[^>]+>)/g).filter(Boolean);
+      for(let p of parts){
+        if(/^<\\//.test(p)) i=Math.max(i-1,0);
+        if(/^</.test(p)){
+          out+='  '.repeat(i)+p+'\\n';
+          if(/<[^!].*[^/]>$/.test(p)&&!/(<meta|<link|<img|<br|<hr)/i.test(p)) i++;
+        } else out+='  '.repeat(i)+p.trim()+(p.trim()? '\\n':'');
+      }
+      return out.trim();
+    }catch(_){ return src; }
+  }
+  beautifyBtn.addEventListener('click',()=>{
+    htmlBox.value=tidy('html',htmlBox.value);
+    cssBox.value=tidy('css',cssBox.value);
+    jsBox.value=tidy('js',jsBox.value);
+    if (autoRun.checked) render();
+  });
+
+  // First render
+  render();
+})();
+</script>
 </body>
 </html>
